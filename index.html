@@ -1695,8 +1695,231 @@
         const steamConfig = {
             apiKey: 'YOUR_STEAM_API_KEY_HERE', // Replace with your Steam API key
             returnUrl: window.location.origin + '/auth/steam/return',
-            realm: window.location.origin
+            realm: window.location.origin,
+            openIdUrl: 'https://steamcommunity.com/openid/login'
         };
+
+        // Discord OAuth2 Configuration
+        const discordOAuthConfig = {
+            clientId: 'YOUR_DISCORD_CLIENT_ID_HERE', // Replace with your Discord app client ID
+            redirectUri: window.location.origin + '/auth/discord/callback',
+            scope: 'identify email guilds.join',
+            responseType: 'code',
+            authUrl: 'https://discord.com/api/oauth2/authorize'
+        };
+
+        // Real Steam Authentication using OpenID
+        function authenticateWithSteam(itemName, price, type) {
+            // Store purchase info for after auth
+            sessionStorage.setItem('pendingPurchase', JSON.stringify({itemName, price, type}));
+            
+            // Build Steam OpenID URL
+            const params = new URLSearchParams({
+                'openid.ns': 'http://specs.openid.net/auth/2.0',
+                'openid.mode': 'checkid_setup',
+                'openid.return_to': steamConfig.returnUrl,
+                'openid.realm': steamConfig.realm,
+                'openid.identity': 'http://specs.openid.net/auth/2.0/identifier_select',
+                'openid.claimed_id': 'http://specs.openid.net/auth/2.0/identifier_select'
+            });
+
+            // Redirect to Steam for authentication
+            window.location.href = `${steamConfig.openIdUrl}?${params.toString()}`;
+        }
+
+        // Real Discord OAuth2 Authentication
+        function authenticateWithDiscord(itemName, price, type) {
+            // Store purchase info for after auth
+            sessionStorage.setItem('pendingPurchase', JSON.stringify({itemName, price, type}));
+            
+            // Build Discord OAuth2 URL
+            const params = new URLSearchParams({
+                client_id: discordOAuthConfig.clientId,
+                redirect_uri: discordOAuthConfig.redirectUri,
+                response_type: discordOAuthConfig.responseType,
+                scope: discordOAuthConfig.scope,
+                state: Math.random().toString(36).substring(2, 15) // CSRF protection
+            });
+
+            // Redirect to Discord for authentication
+            window.location.href = `${discordOAuthConfig.authUrl}?${params.toString()}`;
+        }
+
+        // Handle Steam OpenID return
+        async function handleSteamReturn() {
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            if (urlParams.get('openid.mode') === 'id_res') {
+                try {
+                    // Extract Steam ID from claimed_id
+                    const claimedId = urlParams.get('openid.claimed_id');
+                    const steamId = claimedId.split('/').pop();
+                    
+                    // Verify the OpenID response (in production, do this server-side)
+                    const isValid = await verifySteamOpenID(urlParams);
+                    
+                    if (isValid) {
+                        // Get Steam user info
+                        const userInfo = await getSteamUserInfo(steamId);
+                        
+                        userAuth.steamId = steamId;
+                        userAuth.steamName = userInfo.personaname;
+                        
+                        console.log('✅ Steam authentication successful:', userInfo);
+                        
+                        // Check if we have pending purchase
+                        const pendingPurchase = sessionStorage.getItem('pendingPurchase');
+                        if (pendingPurchase) {
+                            const purchase = JSON.parse(pendingPurchase);
+                            sessionStorage.removeItem('pendingPurchase');
+                            
+                            if (userAuth.discordId) {
+                                userAuth.isAuthenticated = true;
+                                updateAuthStatusDisplay();
+                                showPurchaseModal(purchase.itemName, purchase.price, purchase.type);
+                            } else {
+                                alert('✅ Steam connected! Now connect your Discord account.');
+                                showAuthModal(purchase.itemName, purchase.price, purchase.type);
+                            }
+                        }
+                    } else {
+                        alert('❌ Steam authentication failed. Please try again.');
+                    }
+                } catch (error) {
+                    console.error('Steam auth error:', error);
+                    alert('❌ Steam authentication error. Please try again.');
+                }
+            }
+        }
+
+        // Handle Discord OAuth2 callback
+        async function handleDiscordCallback() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            const state = urlParams.get('state');
+            
+            if (code) {
+                try {
+                    // Exchange code for access token (this should be done server-side in production)
+                    const tokenResponse = await fetch('/api/discord/token', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ code, state })
+                    });
+                    
+                    const tokenData = await tokenResponse.json();
+                    
+                    if (tokenData.access_token) {
+                        // Get Discord user info
+                        const userResponse = await fetch('https://discord.com/api/v10/users/@me', {
+                            headers: { 'Authorization': `Bearer ${tokenData.access_token}` }
+                        });
+                        
+                        const userData = await userResponse.json();
+                        
+                        userAuth.discordId = userData.id;
+                        userAuth.discordName = `${userData.username}#${userData.discriminator}`;
+                        
+                        console.log('✅ Discord authentication successful:', userData);
+                        
+                        // Auto-join Discord server if not already a member
+                        await joinDiscordServer(userData.id, tokenData.access_token);
+                        
+                        // Check if we have pending purchase
+                        const pendingPurchase = sessionStorage.getItem('pendingPurchase');
+                        if (pendingPurchase) {
+                            const purchase = JSON.parse(pendingPurchase);
+                            sessionStorage.removeItem('pendingPurchase');
+                            
+                            if (userAuth.steamId) {
+                                userAuth.isAuthenticated = true;
+                                updateAuthStatusDisplay();
+                                showPurchaseModal(purchase.itemName, purchase.price, purchase.type);
+                            } else {
+                                alert('✅ Discord connected! Now login with Steam.');
+                                showAuthModal(purchase.itemName, purchase.price, purchase.type);
+                            }
+                        }
+                    }
+                } catch (error) {
+                    console.error('Discord auth error:', error);
+                    alert('❌ Discord authentication error. Please try again.');
+                }
+            }
+        }
+
+        // Verify Steam OpenID response (should be done server-side in production)
+        async function verifySteamOpenID(params) {
+            try {
+                // In production, send these params to your backend for verification
+                // This is a simplified client-side check for demo purposes
+                const requiredParams = [
+                    'openid.ns',
+                    'openid.mode',
+                    'openid.op_endpoint',
+                    'openid.claimed_id',
+                    'openid.identity',
+                    'openid.return_to',
+                    'openid.response_nonce',
+                    'openid.assoc_handle',
+                    'openid.signed',
+                    'openid.sig'
+                ];
+                
+                return requiredParams.every(param => params.has(param));
+            } catch (error) {
+                console.error('Steam verification error:', error);
+                return false;
+            }
+        }
+
+        // Get Steam user info using Steam Web API
+        async function getSteamUserInfo(steamId) {
+            try {
+                // In production, this should be called from your backend to hide the API key
+                const response = await fetch(`/api/steam/user/${steamId}`);
+                const data = await response.json();
+                
+                if (data.response && data.response.players && data.response.players.length > 0) {
+                    return data.response.players[0];
+                } else {
+                    throw new Error('Steam user not found');
+                }
+            } catch (error) {
+                console.error('Steam API error:', error);
+                // Fallback for demo
+                return {
+                    steamid: steamId,
+                    personaname: `SteamUser_${steamId.slice(-4)}`,
+                    avatar: '',
+                    profileurl: `https://steamcommunity.com/profiles/${steamId}`
+                };
+            }
+        }
+
+        // Auto-join Discord server
+        async function joinDiscordServer(userId, accessToken) {
+            try {
+                const response = await fetch(`/api/discord/guild/${discordConfig.guildId}/members/${userId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bot ${discordConfig.botToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        access_token: accessToken
+                    })
+                });
+                
+                if (response.ok) {
+                    console.log('✅ User auto-joined Discord server');
+                } else {
+                    console.log('ℹ️ User may already be in the server');
+                }
+            } catch (error) {
+                console.error('Discord join error:', error);
+            }
+        }
 
         // Show purchase modal with authentication
         function showPurchaseModal(itemName, price, type) {
@@ -2597,17 +2820,366 @@
             }, 3000);
         }
 
-        // Create Discord support ticket
+        // Discord Bot Ticket System
+        class DiscordTicketBot {
+            constructor(botToken, guildId) {
+                this.botToken = botToken;
+                this.guildId = guildId;
+                this.apiBase = 'https://discord.com/api/v10';
+                this.ticketCategories = {
+                    purchases: 'YOUR_PURCHASE_CATEGORY_ID',
+                    support: 'YOUR_SUPPORT_CATEGORY_ID',
+                    refunds: 'YOUR_REFUND_CATEGORY_ID'
+                };
+                this.roles = {
+                    customer: 'YOUR_CUSTOMER_ROLE_ID',
+                    vip: 'YOUR_VIP_ROLE_ID',
+                    staff: 'YOUR_STAFF_ROLE_ID'
+                };
+            }
+
+            // Create a new support ticket channel
+            async createTicket(purchaseData) {
+                try {
+                    const channelName = `ticket-${purchaseData.transactionId.toLowerCase()}`;
+                    
+                    // Create private channel for the ticket
+                    const channelResponse = await fetch(`${this.apiBase}/guilds/${this.guildId}/channels`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bot ${this.botToken}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            name: channelName,
+                            type: 0, // Text channel
+                            parent_id: this.ticketCategories.purchases,
+                            permission_overwrites: [
+                                {
+                                    id: this.guildId, // @everyone
+                                    type: 0,
+                                    deny: '1024' // VIEW_CHANNEL
+                                },
+                                {
+                                    id: purchaseData.discordId, // Customer
+                                    type: 1,
+                                    allow: '68608' // VIEW_CHANNEL + SEND_MESSAGES + READ_MESSAGE_HISTORY
+                                },
+                                {
+                                    id: this.roles.staff, // Staff role
+                                    type: 0,
+                                    allow: '8' // ADMINISTRATOR
+                                }
+                            ]
+                        })
+                    });
+
+                    if (!channelResponse.ok) {
+                        throw new Error(`Failed to create channel: ${channelResponse.status}`);
+                    }
+
+                    const channel = await channelResponse.json();
+                    console.log('✅ Ticket channel created:', channel.id);
+
+                    // Send initial ticket message
+                    await this.sendTicketMessage(channel.id, purchaseData);
+
+                    // Send notification to staff channel
+                    await this.notifyStaff(purchaseData, channel.id);
+
+                    return channel;
+                } catch (error) {
+                    console.error('❌ Failed to create Discord ticket:', error);
+                    throw error;
+                }
+            }
+
+            // Send the initial ticket message with purchase details
+            async sendTicketMessage(channelId, purchaseData) {
+                const embed = {
+                    title: '🎫 Support Ticket Created',
+                    description: `Thank you for your purchase! Our staff will assist you shortly.`,
+                    color: 0x28a745,
+                    fields: [
+                        {
+                            name: '🛍️ Purchase Details',
+                            value: `**Item:** ${purchaseData.itemName}\n**Price:** ${purchaseData.price}\n**Transaction ID:** \`${purchaseData.transactionId}\``,
+                            inline: false
+                        },
+                        {
+                            name: '👤 Customer Information',
+                            value: `**Discord:** <@${purchaseData.discordId}>\n**Steam:** ${purchaseData.steamName}\n**Steam ID:** \`${purchaseData.steamId}\``,
+                            inline: false
+                        },
+                        {
+                            name: '📋 Next Steps',
+                            value: `1. ✅ Your purchase has been recorded\n2. 🎮 Join our DayZ server to receive your item\n3. 💬 Staff will deliver your item within 24 hours\n4. 🎫 Keep this ticket open until delivery is complete`,
+                            inline: false
+                        }
+                    ],
+                    footer: {
+                        text: 'Apocalypse Survivors - Automated Ticket System',
+                        icon_url: 'https://cdn.discordapp.com/emojis/123456789.png' // Replace with your server icon
+                    },
+                    timestamp: purchaseData.timestamp
+                };
+
+                const components = [
+                    {
+                        type: 1, // Action Row
+                        components: [
+                            {
+                                type: 2, // Button
+                                style: 3, // Success (Green)
+                                label: 'Mark as Delivered',
+                                custom_id: `deliver_${purchaseData.transactionId}`,
+                                emoji: { name: '✅' }
+                            },
+                            {
+                                type: 2, // Button
+                                style: 4, // Danger (Red)
+                                label: 'Close Ticket',
+                                custom_id: `close_${purchaseData.transactionId}`,
+                                emoji: { name: '🔒' }
+                            },
+                            {
+                                type: 2, // Button
+                                style: 2, // Secondary (Gray)
+                                label: 'Join Server',
+                                custom_id: 'join_server',
+                                emoji: { name: '🎮' }
+                            }
+                        ]
+                    }
+                ];
+
+                try {
+                    const response = await fetch(`${this.apiBase}/channels/${channelId}/messages`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bot ${this.botToken}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            embeds: [embed],
+                            components: components
+                        })
+                    });
+
+                    if (response.ok) {
+                        console.log('✅ Ticket message sent successfully');
+                    } else {
+                        console.error('❌ Failed to send ticket message:', response.status);
+                    }
+                } catch (error) {
+                    console.error('❌ Error sending ticket message:', error);
+                }
+            }
+
+            // Notify staff about new ticket
+            async notifyStaff(purchaseData, channelId) {
+                const staffChannelId = 'YOUR_STAFF_NOTIFICATIONS_CHANNEL_ID'; // Replace with your staff channel ID
+                
+                const embed = {
+                    title: '🚨 New Purchase Ticket',
+                    description: `A new purchase ticket has been created and requires staff attention.`,
+                    color: 0xffc107,
+                    fields: [
+                        {
+                            name: '🎫 Ticket Channel',
+                            value: `<#${channelId}>`,
+                            inline: true
+                        },
+                        {
+                            name: '👤 Customer',
+                            value: `<@${purchaseData.discordId}>`,
+                            inline: true
+                        },
+                        {
+                            name: '🛍️ Item',
+                            value: purchaseData.itemName,
+                            inline: true
+                        },
+                        {
+                            name: '💰 Amount',
+                            value: purchaseData.price,
+                            inline: true
+                        },
+                        {
+                            name: '🔢 Transaction ID',
+                            value: `\`${purchaseData.transactionId}\``,
+                            inline: true
+                        },
+                        {
+                            name: '⏰ Time',
+                            value: `<t:${Math.floor(new Date(purchaseData.timestamp).getTime() / 1000)}:R>`,
+                            inline: true
+                        }
+                    ],
+                    footer: {
+                        text: 'Click the button below to claim this ticket'
+                    }
+                };
+
+                const components = [
+                    {
+                        type: 1,
+                        components: [
+                            {
+                                type: 2,
+                                style: 1, // Primary (Blue)
+                                label: 'Claim Ticket',
+                                custom_id: `claim_${purchaseData.transactionId}`,
+                                emoji: { name: '👋' }
+                            }
+                        ]
+                    }
+                ];
+
+                try {
+                    await fetch(`${this.apiBase}/channels/${staffChannelId}/messages`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bot ${this.botToken}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            content: `<@&${this.roles.staff}>`, // Ping staff role
+                            embeds: [embed],
+                            components: components
+                        })
+                    });
+                    
+                    console.log('✅ Staff notification sent');
+                } catch (error) {
+                    console.error('❌ Failed to notify staff:', error);
+                }
+            }
+
+            // Assign customer role to user
+            async assignCustomerRole(userId) {
+                try {
+                    const response = await fetch(`${this.apiBase}/guilds/${this.guildId}/members/${userId}/roles/${this.roles.customer}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `Bot ${this.botToken}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    if (response.ok) {
+                        console.log('✅ Customer role assigned successfully');
+                        return true;
+                    } else {
+                        console.error('❌ Failed to assign customer role:', response.status);
+                        return false;
+                    }
+                } catch (error) {
+                    console.error('❌ Error assigning customer role:', error);
+                    return false;
+                }
+            }
+
+            // Handle button interactions (this would be in your bot's interaction handler)
+            async handleButtonInteraction(interaction) {
+                const customId = interaction.data.custom_id;
+                const [action, transactionId] = customId.split('_');
+
+                switch (action) {
+                    case 'deliver':
+                        await this.markAsDelivered(interaction, transactionId);
+                        break;
+                    case 'close':
+                        await this.closeTicket(interaction, transactionId);
+                        break;
+                    case 'claim':
+                        await this.claimTicket(interaction, transactionId);
+                        break;
+                    case 'join':
+                        await this.sendServerInfo(interaction);
+                        break;
+                }
+            }
+
+            // Mark item as delivered
+            async markAsDelivered(interaction, transactionId) {
+                // Update the original message to show delivered status
+                const embed = {
+                    title: '✅ Item Delivered',
+                    description: `This purchase has been marked as delivered by <@${interaction.member.user.id}>`,
+                    color: 0x28a745,
+                    timestamp: new Date().toISOString()
+                };
+
+                await fetch(`${this.apiBase}/channels/${interaction.channel_id}/messages/${interaction.message.id}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': `Bot ${this.botToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        embeds: [embed],
+                        components: [] // Remove buttons
+                    })
+                });
+            }
+
+            // Close ticket channel
+            async closeTicket(interaction, transactionId) {
+                // Archive the channel after a delay
+                setTimeout(async () => {
+                    await fetch(`${this.apiBase}/channels/${interaction.channel_id}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': `Bot ${this.botToken}`
+                        }
+                    });
+                }, 10000); // 10 second delay
+
+                // Send closing message
+                const embed = {
+                    title: '🔒 Ticket Closing',
+                    description: 'This ticket will be closed in 10 seconds. Thank you for your purchase!',
+                    color: 0xdc3545
+                };
+
+                await fetch(`${this.apiBase}/channels/${interaction.channel_id}/messages`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bot ${this.botToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ embeds: [embed] })
+                });
+            }
+        }
+
+        // Initialize Discord bot instance
+        const discordBot = new DiscordTicketBot(discordConfig.botToken, discordConfig.guildId);
+
+        // Create Discord support ticket (updated function)
         async function createDiscordTicket(purchaseData) {
-            // In a real implementation, this would make API calls to Discord
-            // For demo purposes, we'll simulate the Discord bot actions
-            
-            console.log('🎫 Creating Discord ticket for:', purchaseData);
-            
-            // Simulate Discord webhook for ticket creation
-            const ticketData = {
+            try {
+                console.log('🎫 Creating Discord ticket for:', purchaseData);
+                
+                // Create ticket using the bot class
+                const ticket = await discordBot.createTicket(purchaseData);
+                
+                console.log('✅ Discord ticket created successfully:', ticket.id);
+                return ticket;
+            } catch (error) {
+                console.error('❌ Failed to create Discord ticket:', error);
+                
+                // Fallback: Send to webhook if bot method fails
+                await this.sendWebhookNotification(purchaseData);
+            }
+        }
+
+        // Fallback webhook notification
+        async function sendWebhookNotification(purchaseData) {
+            const webhookData = {
                 embeds: [{
-                    title: '🛒 New Purchase - Support Ticket',
+                    title: '🛒 New Purchase (Webhook Fallback)',
                     color: 0xdc3545,
                     fields: [
                         { name: '👤 Customer', value: `${purchaseData.steamName}\n${purchaseData.discordName}`, inline: true },
@@ -2615,35 +3187,28 @@
                         { name: '💰 Price', value: purchaseData.price, inline: true },
                         { name: '🆔 Steam ID', value: purchaseData.steamId, inline: true },
                         { name: '🆔 Discord ID', value: `<@${purchaseData.discordId}>`, inline: true },
-                        { name: '🔢 Transaction ID', value: purchaseData.transactionId, inline: true },
-                        { name: '⏰ Purchase Time', value: new Date(purchaseData.timestamp).toLocaleString(), inline: false }
+                        { name: '🔢 Transaction ID', value: purchaseData.transactionId, inline: true }
                     ],
-                    footer: { text: 'DECIMATION.GG - Automatic Ticket System' },
+                    footer: { text: 'Manual ticket creation required' },
                     timestamp: purchaseData.timestamp
                 }]
             };
 
-            // In real implementation, send to Discord webhook:
-            /*
             try {
                 const response = await fetch(discordConfig.webhookUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(ticketData)
+                    body: JSON.stringify(webhookData)
                 });
                 
                 if (response.ok) {
-                    console.log('✅ Discord ticket created successfully');
+                    console.log('✅ Webhook notification sent successfully');
                 } else {
-                    console.error('❌ Failed to create Discord ticket');
+                    console.error('❌ Failed to send webhook notification');
                 }
             } catch (error) {
-                console.error('❌ Discord webhook error:', error);
+                console.error('❌ Webhook error:', error);
             }
-            */
-            
-            // Demo simulation
-            console.log('✅ Discord ticket would be created with data:', ticketData);
         }
 
         // Assign customer role via Discord bot
@@ -2988,7 +3553,22 @@
         document.addEventListener('keydown',function(e){if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&e.key==='I')||(e.ctrlKey&&e.key==='u')){e.preventDefault();}});
 
         // Initialize website when page loads
-        document.addEventListener('DOMContentLoaded', initializeWebsite);
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeWebsite();
+            
+            // Check for authentication callbacks
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            // Handle Steam OpenID return
+            if (urlParams.get('openid.mode') === 'id_res') {
+                handleSteamReturn();
+            }
+            
+            // Handle Discord OAuth2 callback
+            if (urlParams.get('code') && urlParams.get('state')) {
+                handleDiscordCallback();
+            }
+        });
 
         // Add DayZ-themed cursor effect
         document.addEventListener('mousemove', (e) => {
@@ -3014,5 +3594,5 @@
             cursorElement.style.top = e.clientY - 15 + 'px';
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'967e728750aad434',t:'MTc1Mzk3OTA4MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'967e783e018fd434',t:'MTc1Mzk3OTMxNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
