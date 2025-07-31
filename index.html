@@ -1987,54 +1987,498 @@
 
         // Steam Authentication
         function authenticateWithSteam(itemName, price, type) {
-            // In a real implementation, this would redirect to Steam OpenID
-            // For demo purposes, we'll simulate the authentication
-            
-            showLoadingModal('Connecting to Steam...');
+            // Show realistic Steam login popup
+            showSteamLoginPopup(itemName, price, type);
+        }
+
+        // Show Steam login popup simulation
+        function showSteamLoginPopup(itemName, price, type) {
+            const modalOverlay = document.createElement('div');
+            modalOverlay.id = 'steamLoginModal';
+            modalOverlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(10, 10, 10, 0.95);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10002;
+                backdrop-filter: blur(10px);
+            `;
+
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                background: linear-gradient(135deg, #1b2838, #2a475e);
+                border: 3px solid #66c0f4;
+                border-radius: 8px;
+                padding: 0;
+                max-width: 450px;
+                width: 90%;
+                position: relative;
+                box-shadow: 0 30px 60px rgba(102, 192, 244, 0.4);
+                font-family: Arial, sans-serif;
+            `;
+
+            modal.innerHTML = `
+                <!-- Steam Header -->
+                <div style="
+                    background: linear-gradient(135deg, #171a21, #1b2838);
+                    padding: 15px 20px;
+                    border-bottom: 1px solid #3d4450;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                ">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div style="
+                            width: 24px;
+                            height: 24px;
+                            background: #66c0f4;
+                            border-radius: 3px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            font-weight: bold;
+                            color: #1b2838;
+                            font-size: 14px;
+                        ">S</div>
+                        <span style="color: #c7d5e0; font-weight: bold; font-size: 14px;">Steam - Sign In</span>
+                    </div>
+                    <button onclick="closeSteamLogin()" style="
+                        background: none;
+                        border: none;
+                        color: #8f98a0;
+                        font-size: 18px;
+                        cursor: pointer;
+                        padding: 5px;
+                        line-height: 1;
+                    ">×</button>
+                </div>
+
+                <!-- Steam Body -->
+                <div style="padding: 30px;">
+                    <div style="text-align: center; margin-bottom: 25px;">
+                        <div style="
+                            width: 64px;
+                            height: 64px;
+                            background: linear-gradient(135deg, #66c0f4, #417a9b);
+                            border-radius: 8px;
+                            margin: 0 auto 15px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            font-size: 32px;
+                            font-weight: bold;
+                            color: white;
+                        ">S</div>
+                        <h2 style="
+                            color: #c7d5e0;
+                            font-size: 24px;
+                            margin: 0 0 10px 0;
+                            font-weight: normal;
+                        ">Sign in to Steam</h2>
+                        <p style="
+                            color: #8f98a0;
+                            font-size: 13px;
+                            margin: 0;
+                        ">to continue to Apocalypse Survivors</p>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <label style="
+                            display: block;
+                            color: #c7d5e0;
+                            font-size: 12px;
+                            margin-bottom: 5px;
+                            text-transform: uppercase;
+                            font-weight: bold;
+                        ">Steam Account Name</label>
+                        <input type="text" id="steamUsername" placeholder="Enter your Steam account name" style="
+                            width: 100%;
+                            padding: 12px;
+                            background: #32414b;
+                            border: 1px solid #495a69;
+                            border-radius: 3px;
+                            color: #c7d5e0;
+                            font-size: 14px;
+                            box-sizing: border-box;
+                        ">
+                    </div>
+
+                    <div style="margin-bottom: 25px;">
+                        <label style="
+                            display: block;
+                            color: #c7d5e0;
+                            font-size: 12px;
+                            margin-bottom: 5px;
+                            text-transform: uppercase;
+                            font-weight: bold;
+                        ">Password</label>
+                        <input type="password" id="steamPassword" placeholder="Enter your password" style="
+                            width: 100%;
+                            padding: 12px;
+                            background: #32414b;
+                            border: 1px solid #495a69;
+                            border-radius: 3px;
+                            color: #c7d5e0;
+                            font-size: 14px;
+                            box-sizing: border-box;
+                        ">
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <label style="
+                            display: flex;
+                            align-items: center;
+                            color: #8f98a0;
+                            font-size: 12px;
+                            cursor: pointer;
+                        ">
+                            <input type="checkbox" style="margin-right: 8px;">
+                            Remember me
+                        </label>
+                    </div>
+
+                    <button onclick="processSteamLogin('${itemName}', '${price}', '${type}')" style="
+                        width: 100%;
+                        background: linear-gradient(135deg, #66c0f4, #417a9b);
+                        color: white;
+                        border: none;
+                        padding: 12px;
+                        border-radius: 3px;
+                        font-size: 14px;
+                        font-weight: bold;
+                        cursor: pointer;
+                        margin-bottom: 15px;
+                        transition: all 0.3s ease;
+                    " onmouseover="this.style.background='linear-gradient(135deg, #417a9b, #66c0f4)'" onmouseout="this.style.background='linear-gradient(135deg, #66c0f4, #417a9b)'">
+                        Sign In
+                    </button>
+
+                    <div style="text-align: center;">
+                        <a href="#" style="color: #66c0f4; font-size: 12px; text-decoration: none;">Forgot your password?</a>
+                    </div>
+                </div>
+
+                <!-- Steam Footer -->
+                <div style="
+                    background: #171a21;
+                    padding: 15px 20px;
+                    border-top: 1px solid #3d4450;
+                    text-align: center;
+                ">
+                    <p style="
+                        color: #8f98a0;
+                        font-size: 11px;
+                        margin: 0;
+                        line-height: 1.4;
+                    ">By signing in, you agree to Steam's Terms of Service and Privacy Policy</p>
+                </div>
+            `;
+
+            modalOverlay.appendChild(modal);
+            document.body.appendChild(modalOverlay);
+        }
+
+        // Process Steam login
+        function processSteamLogin(itemName, price, type) {
+            const username = document.getElementById('steamUsername').value;
+            const password = document.getElementById('steamPassword').value;
+
+            if (!username || !password) {
+                alert('Please enter both username and password');
+                return;
+            }
+
+            // Close Steam login and show loading
+            closeSteamLogin();
+            showLoadingModal('Authenticating with Steam...');
             
             setTimeout(() => {
                 // Simulate successful Steam authentication
-                userAuth.steamId = '76561198000000000'; // Demo Steam ID
-                userAuth.steamName = 'DemoPlayer_' + Math.floor(Math.random() * 1000);
+                userAuth.steamId = '76561198' + Math.floor(Math.random() * 100000000).toString().padStart(9, '0');
+                userAuth.steamName = username + '_' + Math.floor(Math.random() * 1000);
                 
                 closeLoadingModal();
                 
                 if (userAuth.discordId) {
                     // Both authentications complete
                     userAuth.isAuthenticated = true;
+                    updateAuthStatusDisplay();
                     closeAuthModal();
                     showPurchaseModal(itemName, price, type);
                 } else {
                     // Still need Discord
                     updateAuthModal('Steam connected! Now connect your Discord account.');
                 }
-            }, 2000);
+            }, 2500);
+        }
+
+        // Close Steam login modal
+        function closeSteamLogin() {
+            const modal = document.getElementById('steamLoginModal');
+            if (modal) modal.remove();
         }
 
         // Discord Authentication
         function authenticateWithDiscord(itemName, price, type) {
-            // In a real implementation, this would use Discord OAuth2
-            // For demo purposes, we'll simulate the authentication
-            
-            showLoadingModal('Connecting to Discord...');
+            // Show realistic Discord login popup
+            showDiscordLoginPopup(itemName, price, type);
+        }
+
+        // Show Discord login popup simulation
+        function showDiscordLoginPopup(itemName, price, type) {
+            const modalOverlay = document.createElement('div');
+            modalOverlay.id = 'discordLoginModal';
+            modalOverlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(10, 10, 10, 0.95);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10002;
+                backdrop-filter: blur(10px);
+            `;
+
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                background: #36393f;
+                border-radius: 8px;
+                padding: 0;
+                max-width: 480px;
+                width: 90%;
+                position: relative;
+                box-shadow: 0 30px 60px rgba(88, 101, 242, 0.4);
+                font-family: 'Whitney', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            `;
+
+            modal.innerHTML = `
+                <!-- Discord Header -->
+                <div style="
+                    background: #5865F2;
+                    padding: 20px;
+                    text-align: center;
+                    position: relative;
+                ">
+                    <button onclick="closeDiscordLogin()" style="
+                        position: absolute;
+                        top: 15px;
+                        right: 20px;
+                        background: none;
+                        border: none;
+                        color: white;
+                        font-size: 20px;
+                        cursor: pointer;
+                        padding: 5px;
+                        line-height: 1;
+                        opacity: 0.8;
+                    " onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'">×</button>
+                    
+                    <div style="
+                        width: 60px;
+                        height: 60px;
+                        background: white;
+                        border-radius: 50%;
+                        margin: 0 auto 15px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 28px;
+                        font-weight: bold;
+                        color: #5865F2;
+                    ">D</div>
+                    <h1 style="
+                        color: white;
+                        font-size: 24px;
+                        margin: 0 0 8px 0;
+                        font-weight: 600;
+                    ">Welcome back!</h1>
+                    <p style="
+                        color: rgba(255, 255, 255, 0.8);
+                        font-size: 16px;
+                        margin: 0;
+                    ">We're so excited to see you again!</p>
+                </div>
+
+                <!-- Discord Body -->
+                <div style="padding: 32px;">
+                    <div style="margin-bottom: 20px;">
+                        <label style="
+                            display: block;
+                            color: #b9bbbe;
+                            font-size: 12px;
+                            font-weight: 600;
+                            margin-bottom: 8px;
+                            text-transform: uppercase;
+                            letter-spacing: 0.02em;
+                        ">Email or Phone Number <span style="color: #f04747;">*</span></label>
+                        <input type="text" id="discordEmail" style="
+                            width: 100%;
+                            padding: 10px;
+                            background: #40444b;
+                            border: 1px solid #202225;
+                            border-radius: 3px;
+                            color: #dcddde;
+                            font-size: 16px;
+                            box-sizing: border-box;
+                            transition: border-color 0.15s ease;
+                        " onfocus="this.style.borderColor='#7289da'" onblur="this.style.borderColor='#202225'">
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <label style="
+                            display: block;
+                            color: #b9bbbe;
+                            font-size: 12px;
+                            font-weight: 600;
+                            margin-bottom: 8px;
+                            text-transform: uppercase;
+                            letter-spacing: 0.02em;
+                        ">Password <span style="color: #f04747;">*</span></label>
+                        <input type="password" id="discordPassword" style="
+                            width: 100%;
+                            padding: 10px;
+                            background: #40444b;
+                            border: 1px solid #202225;
+                            border-radius: 3px;
+                            color: #dcddde;
+                            font-size: 16px;
+                            box-sizing: border-box;
+                            transition: border-color 0.15s ease;
+                        " onfocus="this.style.borderColor='#7289da'" onblur="this.style.borderColor='#202225'">
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <a href="#" style="
+                            color: #00aff4;
+                            font-size: 14px;
+                            text-decoration: none;
+                        " onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Forgot your password?</a>
+                    </div>
+
+                    <button onclick="processDiscordLogin('${itemName}', '${price}', '${type}')" style="
+                        width: 100%;
+                        background: #5865F2;
+                        color: white;
+                        border: none;
+                        padding: 12px;
+                        border-radius: 3px;
+                        font-size: 16px;
+                        font-weight: 500;
+                        cursor: pointer;
+                        margin-bottom: 8px;
+                        transition: background-color 0.17s ease;
+                    " onmouseover="this.style.backgroundColor='#4752C4'" onmouseout="this.style.backgroundColor='#5865F2'">
+                        Log In
+                    </button>
+
+                    <div style="
+                        font-size: 14px;
+                        color: #72767d;
+                        margin-top: 20px;
+                    ">
+                        Need an account? <a href="#" style="color: #00aff4; text-decoration: none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Register</a>
+                    </div>
+                </div>
+
+                <!-- Discord Footer -->
+                <div style="
+                    background: #2f3136;
+                    padding: 20px 32px;
+                    border-radius: 0 0 8px 8px;
+                ">
+                    <div style="
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 16px;
+                        margin-bottom: 16px;
+                    ">
+                        <div style="height: 1px; background: #4f545c; flex: 1;"></div>
+                        <span style="color: #b9bbbe; font-size: 12px; font-weight: 600; text-transform: uppercase;">Or continue with</span>
+                        <div style="height: 1px; background: #4f545c; flex: 1;"></div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 8px;">
+                        <button style="
+                            flex: 1;
+                            background: #4267B2;
+                            color: white;
+                            border: none;
+                            padding: 12px;
+                            border-radius: 3px;
+                            font-size: 14px;
+                            cursor: pointer;
+                            transition: opacity 0.2s ease;
+                        " onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+                            Facebook
+                        </button>
+                        <button style="
+                            flex: 1;
+                            background: #1DA1F2;
+                            color: white;
+                            border: none;
+                            padding: 12px;
+                            border-radius: 3px;
+                            font-size: 14px;
+                            cursor: pointer;
+                            transition: opacity 0.2s ease;
+                        " onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+                            Twitter
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            modalOverlay.appendChild(modal);
+            document.body.appendChild(modalOverlay);
+        }
+
+        // Process Discord login
+        function processDiscordLogin(itemName, price, type) {
+            const email = document.getElementById('discordEmail').value;
+            const password = document.getElementById('discordPassword').value;
+
+            if (!email || !password) {
+                alert('Please enter both email and password');
+                return;
+            }
+
+            // Close Discord login and show loading
+            closeDiscordLogin();
+            showLoadingModal('Authenticating with Discord...');
             
             setTimeout(() => {
                 // Simulate successful Discord authentication
-                userAuth.discordId = '123456789012345678'; // Demo Discord ID
-                userAuth.discordName = 'DemoUser#' + Math.floor(Math.random() * 9999).toString().padStart(4, '0');
+                userAuth.discordId = Math.floor(Math.random() * 900000000000000000) + 100000000000000000;
+                userAuth.discordName = email.split('@')[0] + '#' + Math.floor(Math.random() * 9999).toString().padStart(4, '0');
                 
                 closeLoadingModal();
                 
                 if (userAuth.steamId) {
                     // Both authentications complete
                     userAuth.isAuthenticated = true;
+                    updateAuthStatusDisplay();
                     closeAuthModal();
                     showPurchaseModal(itemName, price, type);
                 } else {
                     // Still need Steam
                     updateAuthModal('Discord connected! Now login with Steam.');
                 }
-            }, 2000);
+            }, 2500);
+        }
+
+        // Close Discord login modal
+        function closeDiscordLogin() {
+            const modal = document.getElementById('discordLoginModal');
+            if (modal) modal.remove();
         }
 
         // Show loading modal
@@ -2391,7 +2835,10 @@
         // Close success modal
         function closeSuccessModal() {
             const modal = document.getElementById('successModal');
-            if (modal) modal.remove();
+            if (modal) {
+                modal.remove();
+                updateAuthStatusDisplay(); // Update the nav display
+            }
         }
 
         // Simulate dynamic player counts
@@ -2567,5 +3014,5 @@
             cursorElement.style.top = e.clientY - 15 + 'px';
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'967e6cd9164dd434',t:'MTc1Mzk3ODg0OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'967e728750aad434',t:'MTc1Mzk3OTA4MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
