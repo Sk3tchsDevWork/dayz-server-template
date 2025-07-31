@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DayZ Server - Survive the Apocalypse</title>
+    <title>Apocalypse Survivors - Premium DayZ Experience</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;500;600;700;800&display=swap');
         
         /* Protected CSS - Unauthorized copying prohibited */
-        *{margin:0;padding:0;box-sizing:border-box}body{font-family:'Roboto',sans-serif;background:linear-gradient(135deg,#1a1a1a 0%,#2d2d2d 100%);color:#e0e0e0;overflow-x:hidden}
+        *{margin:0;padding:0;box-sizing:border-box}body{font-family:'Exo 2',sans-serif;background:linear-gradient(135deg,#0a0a0a 0%,#1a0f00 50%,#2d1b00 100%);color:#e8e8e8;overflow-x:hidden}
 
         .container {
             max-width: 1200px;
@@ -18,13 +18,14 @@
 
         /* Header */
         header {
-            background: rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(10px);
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(15px);
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 1000;
-            border-bottom: 2px solid #ff6b35;
+            border-bottom: 3px solid #ff6b35;
+            box-shadow: 0 2px 25px rgba(255, 107, 53, 0.3);
         }
 
         nav {
@@ -36,29 +37,40 @@
 
         .logo {
             font-family: 'Orbitron', monospace;
-            font-size: 1.8rem;
+            font-size: 2.2rem;
             font-weight: 900;
             color: #ff6b35;
-            text-shadow: 0 0 10px rgba(255, 107, 53, 0.5);
+            text-shadow: 0 0 20px rgba(255, 107, 53, 0.8);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .logo::before {
+            content: '🧟';
+            font-size: 2rem;
         }
 
         .nav-links {
             display: flex;
             list-style: none;
-            gap: 2rem;
+            gap: 2.5rem;
         }
 
         .nav-links a {
-            color: #e0e0e0;
+            color: #e8e8e8;
             text-decoration: none;
-            font-weight: 500;
+            font-weight: 600;
+            font-size: 1.1rem;
             transition: all 0.3s ease;
             position: relative;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .nav-links a:hover {
             color: #ff6b35;
-            text-shadow: 0 0 5px rgba(255, 107, 53, 0.5);
+            text-shadow: 0 0 10px rgba(255, 107, 53, 0.8);
         }
 
         .nav-links a::after {
@@ -68,7 +80,7 @@
             left: 0;
             width: 0;
             height: 2px;
-            background: #ff6b35;
+            background: linear-gradient(90deg, #ff6b35, #e55a2b);
             transition: width 0.3s ease;
         }
 
@@ -79,8 +91,8 @@
         /* Hero Section */
         .hero {
             height: 100vh;
-            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
-                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%23333" width="1200" height="800"/><g fill="%23444"><circle cx="200" cy="150" r="3"/><circle cx="800" cy="300" r="2"/><circle cx="1000" cy="100" r="4"/><circle cx="400" cy="500" r="2"/><circle cx="600" cy="200" r="3"/></g></svg>');
+            background: linear-gradient(rgba(10, 10, 10, 0.6), rgba(26, 15, 0, 0.7)), 
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%23000" width="1200" height="800"/><g fill="%23331100"><rect x="0" y="600" width="1200" height="200"/></g><g fill="%23ff6b35" opacity="0.1"><circle cx="200" cy="150" r="3"/><circle cx="400" cy="200" r="2"/><circle cx="600" cy="100" r="4"/><circle cx="800" cy="180" r="2"/><circle cx="1000" cy="120" r="3"/></g><g fill="%23333"><rect x="100" y="500" width="80" height="100"/><rect x="300" y="450" width="60" height="150"/><rect x="500" y="480" width="90" height="120"/><rect x="700" y="420" width="70" height="180"/><rect x="900" y="460" width="85" height="140"/></g></svg>');
             background-size: cover;
             background-position: center;
             display: flex;
@@ -90,71 +102,100 @@
             position: relative;
         }
 
-        .hero-content h1 {
-            font-family: 'Orbitron', monospace;
-            font-size: 4rem;
-            font-weight: 900;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-            animation: glow 2s ease-in-out infinite alternate;
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 70% 30%, rgba(255, 107, 53, 0.15) 0%, transparent 50%);
         }
 
-        @keyframes glow {
-            from { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 107, 53, 0.3); }
-            to { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 30px rgba(255, 107, 53, 0.6); }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-content h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: 5rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            color: #ff6b35;
+            text-shadow: 0 0 20px rgba(255, 107, 53, 0.8);
+            animation: neonGlow 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes neonGlow {
+            from { 
+                text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.9), 0 0 40px rgba(255, 107, 53, 0.5);
+                filter: brightness(1);
+            }
+            to { 
+                text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.9), 0 0 60px rgba(255, 107, 53, 0.8);
+                filter: brightness(1.3);
+            }
         }
 
         .hero-content p {
-            font-size: 1.3rem;
-            margin-bottom: 2rem;
-            max-width: 600px;
+            font-size: 1.5rem;
+            margin-bottom: 3rem;
+            max-width: 800px;
             margin-left: auto;
             margin-right: auto;
+            font-weight: 400;
+            line-height: 1.7;
+            color: #b8b8b8;
         }
 
         .cta-button {
-            background: linear-gradient(45deg, #ff6b35, #ff8c42);
+            background: linear-gradient(45deg, #ff6b35, #e55a2b);
             color: white;
-            padding: 15px 40px;
+            padding: 20px 50px;
             border: none;
-            border-radius: 50px;
-            font-size: 1.1rem;
+            border-radius: 10px;
+            font-size: 1.3rem;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
             text-decoration: none;
             display: inline-block;
-            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-family: 'Exo 2', sans-serif;
         }
 
         .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.5);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 35px rgba(255, 107, 53, 0.6);
+            background: linear-gradient(45deg, #e55a2b, #ff6b35);
         }
 
         /* Server Status */
         .server-status {
-            background: rgba(0, 0, 0, 0.8);
-            padding: 4rem 0;
-            margin-top: -100px;
+            background: rgba(10, 10, 10, 0.9);
+            padding: 6rem 0;
+            margin-top: -120px;
             position: relative;
             z-index: 10;
         }
 
         .status-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 3rem;
+            margin-top: 4rem;
         }
 
         .status-card {
-            background: linear-gradient(135deg, #2a2a2a, #1f1f1f);
-            border: 1px solid #444;
+            background: linear-gradient(135deg, #1a0f00, #2d1b00);
+            border: 2px solid #4a2a00;
             border-radius: 15px;
-            padding: 2rem;
+            padding: 3rem;
             text-align: center;
-            transition: all 0.3s ease;
+            transition: all 0.4s ease;
             position: relative;
             overflow: hidden;
         }
@@ -167,7 +208,7 @@
             width: 100%;
             height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255, 107, 53, 0.1), transparent);
-            transition: left 0.5s ease;
+            transition: left 0.6s ease;
         }
 
         .status-card:hover::before {
@@ -175,101 +216,391 @@
         }
 
         .status-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-10px);
             border-color: #ff6b35;
-            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.2);
+            box-shadow: 0 20px 50px rgba(255, 107, 53, 0.3);
         }
 
         .server-name {
             font-family: 'Orbitron', monospace;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             color: #ff6b35;
-            margin-bottom: 1rem;
+            margin-bottom: 2rem;
+            font-weight: 700;
         }
 
         .server-info {
             display: flex;
             justify-content: space-between;
-            margin: 1rem 0;
+            margin: 1.5rem 0;
+            font-size: 1.2rem;
+            font-weight: 500;
         }
 
         .status-online {
-            color: #4ade80;
+            color: #28a745;
             font-weight: 700;
+            text-shadow: 0 0 8px rgba(40, 167, 69, 0.6);
         }
 
         .status-offline {
-            color: #ef4444;
+            color: #dc3545;
             font-weight: 700;
+            text-shadow: 0 0 8px rgba(220, 53, 69, 0.6);
         }
 
         /* Features Section */
         .features {
-            padding: 6rem 0;
-            background: linear-gradient(135deg, #1f1f1f, #2a2a2a);
+            padding: 8rem 0;
+            background: linear-gradient(135deg, #2d1b00, #1a0f00);
         }
 
         .section-title {
             font-family: 'Orbitron', monospace;
-            font-size: 3rem;
+            font-size: 4rem;
             text-align: center;
-            margin-bottom: 3rem;
+            margin-bottom: 5rem;
             color: #ff6b35;
+            text-shadow: 0 0 25px rgba(255, 107, 53, 0.6);
         }
 
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 3rem;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 4rem;
         }
 
         .feature-card {
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid #444;
-            border-radius: 15px;
-            padding: 2.5rem;
+            background: rgba(10, 10, 10, 0.8);
+            border: 2px solid #4a2a00;
+            border-radius: 18px;
+            padding: 3.5rem;
             text-align: center;
-            transition: all 0.3s ease;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 107, 53, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .feature-card:hover::before {
+            left: 100%;
         }
 
         .feature-card:hover {
-            transform: translateY(-10px);
+            transform: translateY(-15px);
             border-color: #ff6b35;
-            box-shadow: 0 15px 40px rgba(255, 107, 53, 0.2);
+            box-shadow: 0 25px 60px rgba(255, 107, 53, 0.3);
         }
 
         .feature-icon {
-            font-size: 3rem;
-            margin-bottom: 1.5rem;
+            font-size: 4rem;
+            margin-bottom: 2.5rem;
             display: block;
+            filter: drop-shadow(0 0 15px rgba(255, 107, 53, 0.6));
         }
 
         .feature-card h3 {
             font-family: 'Orbitron', monospace;
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
             color: #ff6b35;
+            font-weight: 700;
+        }
+
+        .feature-card p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            font-weight: 400;
+            color: #b8b8b8;
+        }
+
+        /* Support Section - Gallery Style */
+        .support {
+            padding: 8rem 0;
+            background: linear-gradient(135deg, #2d1b00, #1a0f00);
+        }
+
+        /* Gallery Filters */
+        .gallery-filters {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 4rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: rgba(10, 10, 10, 0.8);
+            border: 2px solid #4a2a00;
+            color: #e8e8e8;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Exo 2', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: linear-gradient(45deg, #ff6b35, #e55a2b);
+            border-color: #ff6b35;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 107, 53, 0.4);
+        }
+
+        /* Gallery Grid */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 6rem;
+        }
+
+        .gallery-item {
+            background: rgba(10, 10, 10, 0.9);
+            border: 2px solid #4a2a00;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-8px);
+            border-color: #ff6b35;
+            box-shadow: 0 15px 40px rgba(255, 107, 53, 0.3);
+        }
+
+        .gallery-item-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #4a2a00, #1a0f00);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gallery-item-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 107, 53, 0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .gallery-item:hover .gallery-item-image::before {
+            left: 100%;
+        }
+
+        .gallery-item-content {
+            padding: 2rem;
+        }
+
+        .gallery-item-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.4rem;
+            color: #ff6b35;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .gallery-item-description {
+            color: #b8b8b8;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .gallery-item-price {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .gallery-price {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.8rem;
+            color: #ff6b35;
+            font-weight: 700;
+        }
+
+        .gallery-category {
+            background: rgba(255, 107, 53, 0.2);
+            color: #ff6b35;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .gallery-item-button {
+            width: 100%;
+            background: linear-gradient(45deg, #ff6b35, #e55a2b);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Exo 2', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .gallery-item-button:hover {
+            background: linear-gradient(45deg, #e55a2b, #ff6b35);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
+        }
+
+        /* Support Tiers Section */
+        .support-tiers-section {
+            margin-top: 6rem;
+            padding-top: 4rem;
+            border-top: 2px solid #2a2a4e;
+        }
+
+        .tier-section-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: #ff6b35;
+            text-shadow: 0 0 20px rgba(255, 107, 53, 0.6);
+        }
+
+        .support-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .support-card {
+            background: rgba(10, 10, 10, 0.9);
+            border: 2px solid #4a2a00;
+            border-radius: 15px;
+            padding: 3rem;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .support-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 107, 53, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .support-card:hover::before {
+            left: 100%;
+        }
+
+        .support-card:hover {
+            transform: translateY(-10px);
+            border-color: #ff6b35;
+            box-shadow: 0 20px 50px rgba(255, 107, 53, 0.3);
+        }
+
+        .support-card h3 {
+            font-family: 'Orbitron', monospace;
+            font-size: 2rem;
+            color: #ff6b35;
+            margin-bottom: 2rem;
+            font-weight: 700;
+        }
+
+        .support-price {
+            font-size: 3rem;
+            color: #ff6b35;
+            font-weight: 900;
+            margin-bottom: 2rem;
+            font-family: 'Orbitron', monospace;
+        }
+
+        .support-features {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 3rem;
+        }
+
+        .support-features li {
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 107, 53, 0.3);
+            color: #e8e8e8;
+            font-size: 1.1rem;
+            position: relative;
+            padding-left: 2.5rem;
+        }
+
+        .support-features li:last-child {
+            border-bottom: none;
+        }
+
+        .support-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #ff6b35;
+            font-weight: bold;
+            font-size: 1.3rem;
+        }
+
+        /* Gallery Item Filtering */
+        .gallery-item.hidden {
+            display: none;
         }
 
         /* Rules Section */
         .rules {
-            padding: 6rem 0;
-            background: linear-gradient(135deg, #2a2a2a, #1f1f1f);
+            padding: 8rem 0;
+            background: linear-gradient(135deg, #2d1b00, #1a0f00);
         }
 
         .rules-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-            gap: 3rem;
-            margin-top: 3rem;
+            grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+            gap: 4rem;
+            margin-top: 4rem;
         }
 
         .rules-category {
-            background: rgba(0, 0, 0, 0.8);
-            border: 1px solid #444;
-            border-radius: 15px;
-            padding: 2.5rem;
-            transition: all 0.3s ease;
+            background: rgba(10, 10, 10, 0.9);
+            border: 2px solid #4a2a00;
+            border-radius: 18px;
+            padding: 3.5rem;
+            transition: all 0.4s ease;
             position: relative;
             overflow: hidden;
         }
@@ -282,7 +613,7 @@
             width: 100%;
             height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255, 107, 53, 0.1), transparent);
-            transition: left 0.5s ease;
+            transition: left 0.6s ease;
         }
 
         .rules-category:hover::before {
@@ -290,23 +621,25 @@
         }
 
         .rules-category:hover {
-            transform: translateY(-5px);
-            border-color: #ff6b35;
-            box-shadow: 0 15px 40px rgba(255, 107, 53, 0.2);
+            transform: translateY(-10px);
+            border-color: #dc3545;
+            box-shadow: 0 25px 60px rgba(220, 53, 69, 0.3);
         }
 
         .rules-category h3 {
             font-family: 'Orbitron', monospace;
-            font-size: 1.8rem;
-            color: #ff6b35;
-            margin-bottom: 1.5rem;
+            font-size: 2.2rem;
+            color: #dc3545;
+            margin-bottom: 2.5rem;
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 1.2rem;
+            font-weight: 700;
         }
 
         .rules-category .rule-icon {
-            font-size: 2rem;
+            font-size: 3rem;
+            filter: drop-shadow(0 0 12px rgba(220, 53, 69, 0.6));
         }
 
         .rules-list {
@@ -315,12 +648,14 @@
         }
 
         .rules-list li {
-            padding: 0.8rem 0;
-            border-bottom: 1px solid rgba(255, 107, 53, 0.2);
-            color: #e0e0e0;
-            line-height: 1.6;
+            padding: 1.2rem 0;
+            border-bottom: 1px solid rgba(220, 53, 69, 0.3);
+            color: #e8e8e8;
+            line-height: 1.8;
             position: relative;
-            padding-left: 2rem;
+            padding-left: 3rem;
+            font-size: 1.2rem;
+            font-weight: 400;
         }
 
         .rules-list li:last-child {
@@ -331,8 +666,8 @@
             content: '⚠️';
             position: absolute;
             left: 0;
-            top: 0.8rem;
-            font-size: 1rem;
+            top: 1.2rem;
+            font-size: 1.4rem;
         }
 
         .rules-list li.positive::before {
@@ -344,23 +679,25 @@
         }
 
         .punishment-info {
-            background: rgba(255, 107, 53, 0.1);
-            border: 1px solid rgba(255, 107, 53, 0.3);
-            border-radius: 10px;
-            padding: 1rem;
-            margin-top: 1.5rem;
-            color: #ff6b35;
+            background: rgba(220, 53, 69, 0.15);
+            border: 1px solid rgba(220, 53, 69, 0.4);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 2.5rem;
+            color: #dc3545;
             font-weight: 500;
+            font-size: 1.1rem;
         }
 
         .punishment-info strong {
-            color: #ff8c42;
+            color: #ff6b7a;
+            font-weight: 700;
         }
 
         /* Admin Panel */
         .admin-panel {
-            background: rgba(0, 0, 0, 0.9);
-            padding: 4rem 0;
+            background: rgba(10, 10, 10, 0.95);
+            padding: 6rem 0;
             display: none;
         }
 
@@ -369,72 +706,79 @@
         }
 
         .admin-form {
-            max-width: 600px;
+            max-width: 800px;
             margin: 0 auto;
-            background: #2a2a2a;
-            padding: 2rem;
-            border-radius: 15px;
-            border: 1px solid #444;
+            background: linear-gradient(135deg, #1a0f00, #2d1b00);
+            padding: 4rem;
+            border-radius: 18px;
+            border: 2px solid #4a2a00;
         }
 
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 2.5rem;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 0.5rem;
-            color: #ff6b35;
-            font-weight: 500;
+            margin-bottom: 1rem;
+            color: #dc3545;
+            font-weight: 600;
+            font-size: 1.2rem;
         }
 
         .form-group input, .form-group textarea, .form-group select {
             width: 100%;
-            padding: 12px;
-            background: #1a1a1a;
-            border: 1px solid #444;
-            border-radius: 8px;
-            color: #e0e0e0;
-            font-size: 1rem;
+            padding: 18px;
+            background: #0a0a0a;
+            border: 2px solid #4a2a00;
+            border-radius: 10px;
+            color: #e8e8e8;
+            font-size: 1.1rem;
+            font-family: 'Exo 2', sans-serif;
         }
 
         .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
             outline: none;
-            border-color: #ff6b35;
-            box-shadow: 0 0 10px rgba(255, 107, 53, 0.3);
+            border-color: #dc3545;
+            box-shadow: 0 0 20px rgba(220, 53, 69, 0.3);
         }
 
         /* Footer */
         footer {
-            background: #000;
-            padding: 3rem 0;
+            background: #0a0a0a;
+            padding: 5rem 0;
             text-align: center;
-            border-top: 2px solid #ff6b35;
+            border-top: 3px solid #dc3545;
         }
 
         .footer-content {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 4rem;
+            margin-bottom: 4rem;
         }
 
         .footer-section h3 {
-            color: #ff6b35;
-            margin-bottom: 1rem;
+            color: #dc3545;
+            margin-bottom: 2rem;
             font-family: 'Orbitron', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
         }
 
         .footer-section a {
-            color: #e0e0e0;
+            color: #e8e8e8;
             text-decoration: none;
             display: block;
-            margin-bottom: 0.5rem;
+            margin-bottom: 1rem;
             transition: color 0.3s ease;
+            font-size: 1.1rem;
+            font-weight: 500;
         }
 
         .footer-section a:hover {
-            color: #ff6b35;
+            color: #dc3545;
+            text-shadow: 0 0 8px rgba(220, 53, 69, 0.6);
         }
 
         /* Mobile Responsive */
@@ -444,11 +788,11 @@
             }
             
             .hero-content h1 {
-                font-size: 2.5rem;
+                font-size: 3.5rem;
             }
             
             .section-title {
-                font-size: 2rem;
+                font-size: 3rem;
             }
             
             .features-grid {
@@ -458,32 +802,80 @@
             .rules-container {
                 grid-template-columns: 1fr;
             }
+
+            .status-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery-filters {
+                flex-direction: column;
+                align-items: center;
+            }
         }
 
         /* Loading Animation */
         .loading {
             display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #444;
+            width: 30px;
+            height: 30px;
+            border: 3px solid #2a2a4e;
             border-radius: 50%;
-            border-top-color: #ff6b35;
+            border-top-color: #dc3545;
             animation: spin 1s ease-in-out infinite;
         }
 
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
+
+        /* DayZ-specific styling */
+        .dayz-accent {
+            color: #dc3545;
+            font-weight: 700;
+        }
+
+        .server-info-box {
+            background: linear-gradient(45deg, rgba(220, 53, 69, 0.1), rgba(176, 42, 55, 0.1));
+            border: 2px solid rgba(220, 53, 69, 0.4);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2.5rem 0;
+            text-align: center;
+        }
+
+        .server-info-box h4 {
+            color: #dc3545;
+            font-family: 'Orbitron', monospace;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .connect-info {
+            background: rgba(220, 53, 69, 0.15);
+            border: 2px solid rgba(220, 53, 69, 0.4);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            font-family: 'Orbitron', monospace;
+            font-size: 1.2rem;
+            color: #dc3545;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
     <header>
         <nav class="container">
-            <div class="logo" id="serverLogo">DAYZ SERVER</div>
+            <div class="logo" id="serverLogo">APOCALYPSE SURVIVORS</div>
             <ul class="nav-links">
                 <li><a href="#home">Home</a></li>
                 <li><a href="#servers">Servers</a></li>
                 <li><a href="#features">Features</a></li>
+                <li><a href="#support">Support</a></li>
                 <li><a href="#rules">Rules</a></li>
                 <li><a href="#admin" onclick="toggleAdmin()">Admin</a></li>
             </ul>
@@ -493,15 +885,22 @@
     <main>
         <section class="hero" id="home">
             <div class="hero-content">
-                <h1 id="heroTitle">SURVIVE THE APOCALYPSE</h1>
-                <p id="heroDescription">Join our hardcore DayZ servers for the ultimate survival experience. Loot, craft, and fight to stay alive in a world gone mad.</p>
-                <a href="#servers" class="cta-button">JOIN NOW</a>
+                <h1 id="heroTitle">APOCALYPSE SURVIVORS</h1>
+                <p id="heroDescription">Survive the ultimate DayZ experience with custom loot, vehicles, and intense PvP action. Join our hardcore survival community where every decision matters.</p>
+                <a href="#servers" class="cta-button">JOIN THE FIGHT</a>
             </div>
         </section>
 
         <section class="server-status" id="servers">
             <div class="container">
                 <h2 class="section-title">Server Status</h2>
+                <div class="server-info-box">
+                    <h4>🧟 Connect to Apocalypse Survivors</h4>
+                    <div class="connect-info">
+                        Server IP: <strong>apocalypse.survivors.com:2302</strong>
+                    </div>
+                    <p>Server restarts every <span class="dayz-accent">6 hours</span> for optimal performance</p>
+                </div>
                 <div class="status-grid" id="serverGrid">
                     <!-- Servers will be populated by JavaScript -->
                 </div>
@@ -517,11 +916,42 @@
             </div>
         </section>
 
+        <section class="support" id="support">
+            <div class="container">
+                <h2 class="section-title">Support Our Server</h2>
+                <p style="text-align: center; font-size: 1.4rem; color: #b8b8b8; margin-bottom: 4rem; font-weight: 400;">
+                    Help keep our DayZ server running and get exclusive perks in return
+                </p>
+                
+                <!-- Gallery Filter Tabs -->
+                <div class="gallery-filters">
+                    <button class="filter-btn active" onclick="filterGallery('all')">All Items</button>
+                    <button class="filter-btn" onclick="filterGallery('weapons')">Weapons</button>
+                    <button class="filter-btn" onclick="filterGallery('gear')">Gear & Equipment</button>
+                    <button class="filter-btn" onclick="filterGallery('vehicles')">Vehicles</button>
+                    <button class="filter-btn" onclick="filterGallery('perks')">Server Perks</button>
+                </div>
+
+                <!-- Gallery Grid -->
+                <div class="gallery-grid" id="galleryGrid">
+                    <!-- Gallery items will be populated by JavaScript -->
+                </div>
+
+                <!-- Support Tiers -->
+                <div class="support-tiers-section">
+                    <h3 class="tier-section-title">Monthly Support Tiers</h3>
+                    <div class="support-grid" id="supportGrid">
+                        <!-- Support tiers will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section class="rules" id="rules">
             <div class="container">
                 <h2 class="section-title">Server Rules</h2>
-                <p style="text-align: center; font-size: 1.2rem; color: #ccc; margin-bottom: 2rem;">
-                    Follow these rules to ensure a fair and enjoyable experience for all players
+                <p style="text-align: center; font-size: 1.4rem; color: #b8b8b8; margin-bottom: 4rem; font-weight: 400;">
+                    Follow these rules to ensure fair play and maintain server quality
                 </p>
                 <div class="rules-container" id="rulesContainer">
                     <!-- Rules will be populated by JavaScript -->
@@ -531,15 +961,15 @@
 
         <section class="admin-panel" id="adminPanel">
             <div class="container">
-                <h2 class="section-title">Admin Panel</h2>
+                <h2 class="section-title">Admin Control Panel</h2>
                 <div class="admin-form">
                     <div class="form-group">
                         <label for="adminPassword">Admin Password:</label>
                         <input type="password" id="adminPassword" placeholder="Enter admin password">
                     </div>
-                    <button class="cta-button" onclick="authenticateAdmin()">Login</button>
+                    <button class="cta-button" onclick="authenticateAdmin()">Access Panel</button>
                     
-                    <div id="adminControls" style="display: none; margin-top: 2rem;">
+                    <div id="adminControls" style="display: none; margin-top: 4rem;">
                         <div class="form-group">
                             <label for="serverNameInput">Server Name:</label>
                             <input type="text" id="serverNameInput" placeholder="Enter server name">
@@ -547,10 +977,6 @@
                         <div class="form-group">
                             <label for="serverIPInput">Server IP:</label>
                             <input type="text" id="serverIPInput" placeholder="Enter server IP">
-                        </div>
-                        <div class="form-group">
-                            <label for="serverPortInput">Server Port:</label>
-                            <input type="text" id="serverPortInput" placeholder="Enter server port">
                         </div>
                         <div class="form-group">
                             <label for="maxPlayersInput">Max Players:</label>
@@ -564,7 +990,7 @@
                             </select>
                         </div>
                         <button class="cta-button" onclick="addServer()">Add Server</button>
-                        <button class="cta-button" onclick="updateTheme()" style="margin-left: 1rem;">Update Theme</button>
+                        <button class="cta-button" onclick="updateTheme()" style="margin-left: 1.5rem;">Update Theme</button>
                     </div>
                 </div>
             </div>
@@ -579,150 +1005,340 @@
                     <a href="#home">Home</a>
                     <a href="#servers">Servers</a>
                     <a href="#features">Features</a>
+                    <a href="#support">Support</a>
                     <a href="#rules">Rules</a>
                 </div>
                 <div class="footer-section">
                     <h3>Community</h3>
-                    <a href="#" onclick="openDiscord()">Discord</a>
-                    <a href="#" onclick="openSteamGroup()">Steam Group</a>
-                    <a href="#" onclick="openForums()">Forums</a>
+                    <a href="#" onclick="openDiscord()">Discord Server</a>
+                    <a href="#" onclick="openSteam()">Steam Group</a>
+                    <a href="#" onclick="openForums()">Community Forums</a>
                 </div>
                 <div class="footer-section">
                     <h3>Support</h3>
-                    <a href="#" onclick="showDemo('Contact')">Contact</a>
-                    <a href="#rules">Rules</a>
-                    <a href="#" onclick="showDemo('Donations')">Donations</a>
+                    <a href="#" onclick="showDemo('Contact')">Contact Admin</a>
+                    <a href="#rules">Server Rules</a>
+                    <a href="#support">Donate</a>
                 </div>
             </div>
-            <p>&copy; 2024 DayZ Server Template. Built for survival.</p>
+            <p>&copy; 2024 Apocalypse Survivors DayZ. Survive together or die alone.</p>
         </div>
     </footer>
 
     <script>
         // Code obfuscated for protection - unauthorized copying prohibited
-        const _0x4a2b=['DAYZ\x20SERVER','SURVIVE\x20THE\x20APOCALYPSE','Join\x20our\x20hardcore\x20DayZ\x20servers\x20for\x20the\x20ultimate\x20survival\x20experience.\x20Loot,\x20craft,\x20and\x20fight\x20to\x20stay\x20alive\x20in\x20a\x20world\x20gone\x20mad.','admin123'];const _0x1f3c=function(_0x4a2b45,_0x1f3c89){_0x4a2b45=_0x4a2b45-0x0;let _0x2d4e78=_0x4a2b[_0x4a2b45];return _0x2d4e78;};const config = {
-            serverName: _0x1f3c('0x0'),
-            heroTitle: _0x1f3c('0x1'),
-            heroDescription: _0x1f3c('0x2'),
-            adminPassword: _0x1f3c('0x3'),
+        const _0x9c4f=['DECIMATION.GG','DECIMATION.GG','Survive\x20the\x20ultimate\x20DayZ\x20experience\x20with\x20custom\x20loot,\x20vehicles,\x20and\x20intense\x20PvP\x20action.\x20Join\x20our\x20hardcore\x20survival\x20community\x20where\x20every\x20decision\x20matters.','dayzadmin2024'];const _0x7e2b=function(_0x9c4f45,_0x7e2b89){_0x9c4f45=_0x9c4f45-0x0;let _0x5a8d78=_0x9c4f[_0x9c4f45];return _0x5a8d78;};const config = {
+            serverName: _0x7e2b('0x0'),
+            heroTitle: _0x7e2b('0x1'),
+            heroDescription: _0x7e2b('0x2'),
+            adminPassword: _0x7e2b('0x3'),
             servers: [
                 {
-                    name: "Hardcore Survival",
-                    ip: "192.168.1.100",
-                    port: "2302",
-                    players: 45,
+                    name: "Apocalypse Main",
+                    ip: "apocalypse.survivors.com:2302",
+                    players: 58,
                     maxPlayers: 60,
-                    status: "online"
+                    status: "online",
+                    queue: 3,
+                    uptime: "99.2%"
                 },
                 {
-                    name: "PvP Arena",
-                    ip: "192.168.1.101", 
-                    port: "2303",
-                    players: 32,
-                    maxPlayers: 40,
-                    status: "online"
+                    name: "Apocalypse PvE",
+                    ip: "pve.apocalypse.survivors.com:2302",
+                    players: 42,
+                    maxPlayers: 50,
+                    status: "online",
+                    queue: 0,
+                    uptime: "98.8%"
                 },
                 {
-                    name: "Roleplay Server",
-                    ip: "192.168.1.102",
-                    port: "2304", 
+                    name: "Apocalypse Hardcore",
+                    ip: "hardcore.apocalypse.survivors.com:2302",
                     players: 0,
-                    maxPlayers: 80,
-                    status: "offline"
+                    maxPlayers: 40,
+                    status: "offline",
+                    queue: 0,
+                    uptime: "N/A"
+                }
+            ],
+            galleryItems: [
+                // Weapons
+                {
+                    id: 1,
+                    title: "AK-74 Assault Rifle",
+                    description: "Fully automatic assault rifle with custom attachments. Perfect for close to medium range combat.",
+                    price: "$15.00",
+                    category: "weapons",
+                    icon: "🔫",
+                    rarity: "Epic"
+                },
+                {
+                    id: 2,
+                    title: "M4A1 Carbine",
+                    description: "Modular assault rifle system with multiple customization options. NATO standard weapon.",
+                    price: "$18.00",
+                    category: "weapons",
+                    icon: "🔫",
+                    rarity: "Legendary"
+                },
+                {
+                    id: 3,
+                    title: "SVD Sniper Rifle",
+                    description: "Long-range precision rifle with high-powered scope. One-shot potential to the head.",
+                    price: "$25.00",
+                    category: "weapons",
+                    icon: "🎯",
+                    rarity: "Legendary"
+                },
+                {
+                    id: 4,
+                    title: "Combat Knife",
+                    description: "Silent takedown weapon. Perfect for stealth operations and close quarters combat.",
+                    price: "$8.00",
+                    category: "weapons",
+                    icon: "🔪",
+                    rarity: "Common"
+                },
+                // Gear & Equipment
+                {
+                    id: 5,
+                    title: "Tactical Vest",
+                    description: "High-capacity tactical vest with multiple pouches. Provides excellent protection and storage.",
+                    price: "$12.00",
+                    category: "gear",
+                    icon: "🦺",
+                    rarity: "Rare"
+                },
+                {
+                    id: 6,
+                    title: "Night Vision Goggles",
+                    description: "Military-grade night vision equipment. See clearly in complete darkness.",
+                    price: "$20.00",
+                    category: "gear",
+                    icon: "🥽",
+                    rarity: "Epic"
+                },
+                {
+                    id: 7,
+                    title: "Ghillie Suit",
+                    description: "Full camouflage suit for ultimate stealth. Blend into the environment perfectly.",
+                    price: "$22.00",
+                    category: "gear",
+                    icon: "🥷",
+                    rarity: "Epic"
+                },
+                {
+                    id: 8,
+                    title: "Medical Kit",
+                    description: "Complete medical supplies including bandages, morphine, and antibiotics.",
+                    price: "$10.00",
+                    category: "gear",
+                    icon: "🏥",
+                    rarity: "Rare"
+                },
+                // Vehicles
+                {
+                    id: 9,
+                    title: "Military Humvee",
+                    description: "Armored military vehicle with mounted weapon. Perfect for squad operations.",
+                    price: "$45.00",
+                    category: "vehicles",
+                    icon: "🚙",
+                    rarity: "Legendary"
+                },
+                {
+                    id: 10,
+                    title: "Helicopter",
+                    description: "Fast aerial transport. Escape danger or scout from above with this helicopter.",
+                    price: "$60.00",
+                    category: "vehicles",
+                    icon: "🚁",
+                    rarity: "Mythic"
+                },
+                {
+                    id: 11,
+                    title: "Motorcycle",
+                    description: "Fast and agile two-wheeler. Perfect for quick escapes and solo missions.",
+                    price: "$25.00",
+                    category: "vehicles",
+                    icon: "🏍️",
+                    rarity: "Rare"
+                },
+                {
+                    id: 12,
+                    title: "Armored Truck",
+                    description: "Heavy-duty transport vehicle with armor plating. Ideal for supply runs.",
+                    price: "$35.00",
+                    category: "vehicles",
+                    icon: "🚚",
+                    rarity: "Epic"
+                },
+                // Server Perks
+                {
+                    id: 13,
+                    title: "VIP Status",
+                    description: "Skip server queue, reserved slot, and exclusive VIP chat channel access.",
+                    price: "$10.00/month",
+                    category: "perks",
+                    icon: "👑",
+                    rarity: "Special"
+                },
+                {
+                    id: 14,
+                    title: "Base Protection",
+                    description: "Your base is protected from raids for 7 days. Build without fear.",
+                    price: "$15.00",
+                    category: "perks",
+                    icon: "🏠",
+                    rarity: "Epic"
+                },
+                {
+                    id: 15,
+                    title: "Spawn Kit",
+                    description: "Start with basic survival gear including food, water, and basic weapons.",
+                    price: "$5.00",
+                    category: "perks",
+                    icon: "🎒",
+                    rarity: "Common"
+                },
+                {
+                    id: 16,
+                    title: "Custom Nameplate",
+                    description: "Personalized nameplate with custom colors and effects visible to all players.",
+                    price: "$8.00",
+                    category: "perks",
+                    icon: "📛",
+                    rarity: "Rare"
+                }
+            ],
+            supportTiers: [
+                {
+                    name: "Survivor",
+                    price: "$5",
+                    features: [
+                        "Basic spawn kit",
+                        "Discord supporter role",
+                        "Server announcements",
+                        "Community access"
+                    ]
+                },
+                {
+                    name: "Veteran",
+                    price: "$15",
+                    features: [
+                        "Everything in Survivor",
+                        "VIP server access",
+                        "Priority queue",
+                        "Custom nameplate",
+                        "Weekly care package"
+                    ]
+                },
+                {
+                    name: "Elite",
+                    price: "$30",
+                    features: [
+                        "Everything in Veteran",
+                        "Base protection (7 days)",
+                        "Vehicle spawn access",
+                        "Admin support priority",
+                        "Exclusive Discord channels"
+                    ]
+                }
+            ],
+            features: [
+                {
+                    icon: "🧟",
+                    title: "Zombie Hordes",
+                    description: "Face massive zombie hordes with improved AI. Dynamic spawning creates unpredictable encounters throughout Chernarus."
+                },
+                {
+                    icon: "🚗",
+                    title: "Custom Vehicles",
+                    description: "Drive military vehicles, helicopters, and custom cars. Full vehicle customization and repair systems available."
+                },
+                {
+                    icon: "🏠",
+                    title: "Base Building",
+                    description: "Construct elaborate bases with advanced building systems. Defend your territory with walls, gates, and traps."
+                },
+                {
+                    icon: "💰",
+                    title: "Economy System",
+                    description: "Trade with NPCs and players using our custom currency system. Buy rare items and equipment from traders."
+                },
+                {
+                    icon: "🎯",
+                    title: "PvP Zones",
+                    description: "Designated PvP areas with high-value loot. Risk vs reward gameplay with safe zones for new players."
+                },
+                {
+                    icon: "🔧",
+                    title: "Weapon Crafting",
+                    description: "Craft and modify weapons with our extensive crafting system. Create unique loadouts for different situations."
                 }
             ],
             rules: [
                 {
-                    category: "General Conduct",
-                    icon: "👥",
+                    category: "General Rules",
+                    icon: "📋",
                     rules: [
-                        { text: "Respect all players and staff members at all times", type: "positive" },
-                        { text: "No harassment, discrimination, or toxic behavior", type: "negative" },
-                        { text: "English only in global chat", type: "general" },
-                        { text: "No spamming or excessive use of caps", type: "negative" },
-                        { text: "Use appropriate usernames and character names", type: "general" }
+                        { text: "No cheating, hacking, or exploiting game mechanics", type: "negative" },
+                        { text: "Respect all players and maintain good sportsmanship", type: "positive" },
+                        { text: "English only in global chat channels", type: "general" },
+                        { text: "No spam, advertising, or inappropriate content", type: "negative" },
+                        { text: "Report bugs and issues to administrators", type: "positive" }
                     ],
-                    punishment: "Violations result in warnings, temporary mutes, or permanent bans depending on severity"
+                    punishment: "Violations result in warnings, temporary bans, or permanent bans depending on severity"
                 },
                 {
-                    category: "Gameplay Rules",
-                    icon: "🎮",
-                    rules: [
-                        { text: "No cheating, hacking, or exploiting game bugs", type: "negative" },
-                        { text: "Combat logging is strictly prohibited", type: "negative" },
-                        { text: "No ghosting or server hopping for tactical advantage", type: "negative" },
-                        { text: "Roleplay scenarios are encouraged", type: "positive" },
-                        { text: "Base building is allowed in designated areas only", type: "general" }
-                    ],
-                    punishment: "Cheating results in immediate permanent ban. Other violations may result in temporary bans"
-                },
-                {
-                    category: "PvP Guidelines",
+                    category: "Combat Rules",
                     icon: "⚔️",
                     rules: [
-                        { text: "KOS (Kill on Sight) is allowed in military zones", type: "positive" },
-                        { text: "No camping fresh spawn areas", type: "negative" },
-                        { text: "Initiate contact before engaging in civilian areas", type: "general" },
-                        { text: "No revenge killing after respawn", type: "negative" },
-                        { text: "Group limit of 6 players maximum", type: "general" }
+                        { text: "No combat logging - stay in game for 30 seconds after combat", type: "negative" },
+                        { text: "KOS (Kill on Sight) allowed in designated PvP zones only", type: "general" },
+                        { text: "No griefing or targeting new players repeatedly", type: "negative" },
+                        { text: "Fair play encouraged - help new survivors when possible", type: "positive" },
+                        { text: "No stream sniping or metagaming from streams", type: "negative" }
                     ],
-                    punishment: "PvP rule violations result in temporary bans ranging from 24 hours to 7 days"
+                    punishment: "Combat rule violations result in temporary bans. Repeated offenses lead to permanent ban"
                 },
                 {
                     category: "Base Building",
                     icon: "🏗️",
                     rules: [
-                        { text: "Maximum of 2 bases per player/group", type: "general" },
-                        { text: "No building in military loot spawns", type: "negative" },
-                        { text: "Bases must have at least one raidable entrance", type: "general" },
-                        { text: "No floating or unrealistic structures", type: "negative" },
-                        { text: "Inactive bases (30+ days) will be removed", type: "general" }
+                        { text: "No building in military zones or major cities", type: "negative" },
+                        { text: "Bases can be raided after 48 hours of inactivity", type: "general" },
+                        { text: "Maximum base size: 50x50 meters", type: "general" },
+                        { text: "No blocking roads, spawn points, or loot locations", type: "negative" },
+                        { text: "Clean up abandoned structures to help server performance", type: "positive" }
                     ],
                     punishment: "Illegal bases will be removed without warning. Repeated violations may result in building restrictions"
-                }
-            ],
-            features: [
-                {
-                    icon: "🎯",
-                    title: "High Performance",
-                    description: "Optimized servers with 99.9% uptime and low latency for the best gaming experience."
                 },
                 {
-                    icon: "🛡️",
-                    title: "Anti-Cheat Protection",
-                    description: "Advanced anti-cheat systems to ensure fair play and maintain server integrity."
-                },
-                {
-                    icon: "🔧",
-                    title: "Custom Modifications",
-                    description: "Carefully selected mods to enhance gameplay while maintaining the DayZ experience."
-                },
-                {
-                    icon: "👥",
-                    title: "Active Community",
-                    description: "Join thousands of players in our Discord community with regular events and competitions."
-                },
-                {
-                    icon: "⚡",
-                    title: "Regular Updates",
-                    description: "Servers are updated regularly with the latest DayZ patches and security fixes."
-                },
-                {
-                    icon: "🎮",
-                    title: "Multiple Game Modes",
-                    description: "Choose from various game modes including hardcore survival, PvP, and roleplay servers."
+                    category: "Server Etiquette",
+                    icon: "🤝",
+                    rules: [
+                        { text: "No mic spamming or playing music through voice chat", type: "negative" },
+                        { text: "Use appropriate names - no offensive or inappropriate usernames", type: "general" },
+                        { text: "Help maintain server atmosphere and immersion", type: "positive" },
+                        { text: "No impersonating staff members or other players", type: "negative" },
+                        { text: "Follow Discord rules when using voice channels", type: "general" }
+                    ],
+                    punishment: "Etiquette violations result in mutes, kicks, or temporary bans based on severity"
                 }
             ]
         };
 
         // Copyright Protection - Unauthorized copying is prohibited
-        (function(){const _0x5e8f=['log','warn','This\x20code\x20is\x20protected\x20by\x20copyright.\x20Unauthorized\x20copying\x20or\x20distribution\x20is\x20prohibited.'];if(typeof window!=='undefined'){console[_0x5e8f[0]](_0x5e8f[2]);console[_0x5e8f[1]]('⚠️\x20Code\x20theft\x20detection\x20active');}})();
+        (function(){const _0x3f8e=['log','warn','This\x20DayZ\x20server\x20code\x20is\x20protected\x20by\x20copyright.\x20Unauthorized\x20copying\x20is\x20prohibited.'];if(typeof window!=='undefined'){console[_0x3f8e[0]](_0x3f8e[2]);console[_0x3f8e[1]]('🔒\x20Anti-theft\x20protection\x20active');}})();
 
         // Initialize the website
         function initializeWebsite() {
             updateThemeElements();
             renderServers();
             renderFeatures();
+            renderGalleryItems();
+            renderSupportTiers();
             renderRules();
             simulatePlayerCounts();
         }
@@ -732,7 +1348,7 @@
             document.getElementById('serverLogo').textContent = config.serverName;
             document.getElementById('heroTitle').textContent = config.heroTitle;
             document.getElementById('heroDescription').textContent = config.heroDescription;
-            document.title = config.serverName + " - Survive the Apocalypse";
+            document.title = config.serverName + " - Premium DayZ Experience";
         }
 
         // Render server status cards
@@ -750,16 +1366,24 @@
                         <span id="players-${index}">${server.players}/${server.maxPlayers}</span>
                     </div>
                     <div class="server-info">
+                        <span>Queue:</span>
+                        <span id="queue-${index}">${server.queue} waiting</span>
+                    </div>
+                    <div class="server-info">
                         <span>Status:</span>
                         <span class="status-${server.status}" id="status-${index}">${server.status.toUpperCase()}</span>
                     </div>
                     <div class="server-info">
-                        <span>IP:</span>
-                        <span>${server.ip}:${server.port}</span>
+                        <span>Uptime:</span>
+                        <span>${server.uptime}</span>
                     </div>
-                    <button class="cta-button" onclick="connectToServer('${server.ip}:${server.port}')" 
+                    <div class="server-info">
+                        <span>Connect:</span>
+                        <span style="font-family: 'Orbitron', monospace; font-size: 1rem; color: #dc3545;">${server.ip}</span>
+                    </div>
+                    <button class="cta-button" onclick="connectToDayZ('${server.ip}')" 
                             ${server.status === 'offline' ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
-                        ${server.status === 'online' ? 'CONNECT' : 'OFFLINE'}
+                        ${server.status === 'online' ? 'CONNECT NOW' : 'OFFLINE'}
                     </button>
                 `;
                 serverGrid.appendChild(serverCard);
@@ -783,6 +1407,56 @@
             });
         }
 
+        // Render gallery items
+        function renderGalleryItems() {
+            const galleryGrid = document.getElementById('galleryGrid');
+            galleryGrid.innerHTML = '';
+
+            config.galleryItems.forEach(item => {
+                const galleryItem = document.createElement('div');
+                galleryItem.className = `gallery-item ${item.category}`;
+                galleryItem.innerHTML = `
+                    <div class="gallery-item-image">
+                        ${item.icon}
+                    </div>
+                    <div class="gallery-item-content">
+                        <h3 class="gallery-item-title">${item.title}</h3>
+                        <p class="gallery-item-description">${item.description}</p>
+                        <div class="gallery-item-price">
+                            <span class="gallery-price">${item.price}</span>
+                            <span class="gallery-category">${item.category}</span>
+                        </div>
+                        <button class="gallery-item-button" onclick="purchaseItem('${item.title}', '${item.price}')">
+                            Purchase Now
+                        </button>
+                    </div>
+                `;
+                galleryGrid.appendChild(galleryItem);
+            });
+        }
+
+        // Render support tiers
+        function renderSupportTiers() {
+            const supportGrid = document.getElementById('supportGrid');
+            supportGrid.innerHTML = '';
+
+            config.supportTiers.forEach(tier => {
+                const supportCard = document.createElement('div');
+                supportCard.className = 'support-card';
+                supportCard.innerHTML = `
+                    <h3>${tier.name}</h3>
+                    <div class="support-price">${tier.price}<span style="font-size: 1.5rem;">/month</span></div>
+                    <ul class="support-features">
+                        ${tier.features.map(feature => `<li>${feature}</li>`).join('')}
+                    </ul>
+                    <button class="cta-button" onclick="subscribeTier('${tier.name}', '${tier.price}')">
+                        Subscribe Now
+                    </button>
+                `;
+                supportGrid.appendChild(supportCard);
+            });
+        }
+
         // Render rules
         function renderRules() {
             const rulesContainer = document.getElementById('rulesContainer');
@@ -802,11 +1476,176 @@
                         `).join('')}
                     </ul>
                     <div class="punishment-info">
-                        <strong>Consequences:</strong> ${category.punishment}
+                        <strong>Enforcement:</strong> ${category.punishment}
                     </div>
                 `;
                 rulesContainer.appendChild(rulesCategory);
             });
+        }
+
+        // Gallery filtering function
+        function filterGallery(category) {
+            const items = document.querySelectorAll('.gallery-item');
+            const buttons = document.querySelectorAll('.filter-btn');
+            
+            // Update active button
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Filter items
+            items.forEach(item => {
+                if (category === 'all' || item.classList.contains(category)) {
+                    item.classList.remove('hidden');
+                } else {
+                    item.classList.add('hidden');
+                }
+            });
+        }
+
+        // Purchase item function
+        function purchaseItem(itemName, price) {
+            showPurchaseModal(itemName, price, 'item');
+        }
+
+        // Subscribe to tier function
+        function subscribeTier(tierName, price) {
+            showPurchaseModal(tierName, price, 'subscription');
+        }
+
+        // Show purchase modal
+        function showPurchaseModal(itemName, price, type) {
+            const modalOverlay = document.createElement('div');
+            modalOverlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(10, 10, 10, 0.95);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10000;
+                backdrop-filter: blur(10px);
+            `;
+
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                background: linear-gradient(135deg, #1a1a2e, #16213e);
+                border: 3px solid #dc3545;
+                border-radius: 18px;
+                padding: 3rem;
+                max-width: 500px;
+                width: 90%;
+                text-align: center;
+                position: relative;
+                box-shadow: 0 30px 60px rgba(220, 53, 69, 0.4);
+            `;
+
+            modal.innerHTML = `
+                <button onclick="closePurchaseModal()" style="
+                    position: absolute;
+                    top: 20px;
+                    right: 25px;
+                    background: none;
+                    border: none;
+                    color: #dc3545;
+                    font-size: 2rem;
+                    cursor: pointer;
+                    padding: 5px;
+                    font-weight: bold;
+                ">×</button>
+                
+                <h2 style="
+                    font-family: 'Orbitron', monospace;
+                    color: #dc3545;
+                    margin-bottom: 2rem;
+                    font-size: 2rem;
+                    text-shadow: 0 0 15px rgba(220, 53, 69, 0.6);
+                ">${type === 'item' ? '🛒' : '👑'} Purchase ${itemName}</h2>
+                
+                <div style="
+                    background: rgba(10, 10, 10, 0.7);
+                    padding: 2rem;
+                    border-radius: 15px;
+                    margin-bottom: 2rem;
+                    border: 2px solid #2a2a4e;
+                ">
+                    <p style="color: #e8e8e8; margin-bottom: 1rem; font-size: 1.2rem;">
+                        ${type === 'item' ? 'Item' : 'Subscription'}: <strong style="color: #dc3545;">${itemName}</strong>
+                    </p>
+                    <p style="
+                        color: #dc3545;
+                        font-family: 'Orbitron', monospace;
+                        font-size: 2rem;
+                        font-weight: bold;
+                        text-shadow: 0 0 10px rgba(220, 53, 69, 0.4);
+                    ">${price}</p>
+                </div>
+
+                <div style="
+                    background: rgba(220, 53, 69, 0.15);
+                    border: 2px solid rgba(220, 53, 69, 0.4);
+                    border-radius: 12px;
+                    padding: 1.5rem;
+                    margin-bottom: 2rem;
+                    font-size: 1rem;
+                    color: #e8e8e8;
+                ">
+                    <strong style="color: #dc3545;">Demo Notice:</strong><br>
+                    This is a demonstration of the purchase system. In a real implementation, this would connect to PayPal, Stripe, or another payment processor.
+                </div>
+
+                <button onclick="processPurchase('${itemName}', '${price}')" style="
+                    background: linear-gradient(45deg, #dc3545, #b02a37);
+                    color: white;
+                    padding: 15px 40px;
+                    border: none;
+                    border-radius: 10px;
+                    font-size: 1.2rem;
+                    font-weight: 700;
+                    cursor: pointer;
+                    margin-right: 1rem;
+                    transition: all 0.3s ease;
+                    font-family: 'Exo 2', sans-serif;
+                    text-transform: uppercase;
+                    letter-spacing: 1px;
+                " onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 30px rgba(220, 53, 69, 0.5)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                    Complete Purchase
+                </button>
+                
+                <button onclick="closePurchaseModal()" style="
+                    background: transparent;
+                    color: #b8b8b8;
+                    padding: 15px 30px;
+                    border: 2px solid #2a2a4e;
+                    border-radius: 10px;
+                    font-size: 1.1rem;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    font-family: 'Exo 2', sans-serif;
+                " onmouseover="this.style.borderColor='#dc3545'; this.style.color='#dc3545'" onmouseout="this.style.borderColor='#2a2a4e'; this.style.color='#b8b8b8'">
+                    Cancel
+                </button>
+            `;
+
+            modalOverlay.appendChild(modal);
+            document.body.appendChild(modalOverlay);
+            modalOverlay.id = 'purchaseModal';
+        }
+
+        // Close purchase modal
+        function closePurchaseModal() {
+            const modal = document.getElementById('purchaseModal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        // Process purchase
+        function processPurchase(itemName, price) {
+            alert(`🛒 Purchase Demo\n\nItem: ${itemName}\nPrice: ${price}\n\nIn a real implementation, this would:\n• Process payment via PayPal/Stripe\n• Add item to your DayZ character\n• Send confirmation email\n• Update your account status`);
+            closePurchaseModal();
         }
 
         // Simulate dynamic player counts
@@ -815,307 +1654,38 @@
                 config.servers.forEach((server, index) => {
                     if (server.status === 'online') {
                         // Simulate player count changes
-                        const change = Math.floor(Math.random() * 5) - 2; // -2 to +2
+                        const change = Math.floor(Math.random() * 7) - 3; // -3 to +3
                         server.players = Math.max(0, Math.min(server.maxPlayers, server.players + change));
                         
+                        // Simulate queue changes
+                        if (server.players >= server.maxPlayers - 2) {
+                            server.queue = Math.max(0, server.queue + Math.floor(Math.random() * 2));
+                        } else {
+                            server.queue = Math.max(0, server.queue - Math.floor(Math.random() * 2));
+                        }
+                        
                         const playerElement = document.getElementById(`players-${index}`);
+                        const queueElement = document.getElementById(`queue-${index}`);
+                        
                         if (playerElement) {
                             playerElement.textContent = `${server.players}/${server.maxPlayers}`;
                         }
+                        if (queueElement) {
+                            queueElement.textContent = `${server.queue} waiting`;
+                        }
                     }
                 });
-            }, 10000); // Update every 10 seconds
+            }, 8000); // Update every 8 seconds
         }
 
-        // Obfuscated functions - reverse engineering prohibited
-        const _0x9c4d=function(_0x2a1b,_0x8f3e){const[_0x4d2c,_0x7e1f]=_0x2a1b.split(':');_0x1a5b(_0x4d2c,_0x7e1f);};
-        function connectToServer(serverAddress) {
-            return _0x9c4d(serverAddress);
+        // DayZ connection function
+        function connectToDayZ(serverAddress) {
+            showDayZConnectionModal(serverAddress);
         }
 
-        // Show connection modal with multiple join options
-        const _0x1a5b=function showConnectionModal(ip, port) {
-            // Create modal overlay
-            const modalOverlay = document.createElement('div');
-            modalOverlay.style.cssText = `
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.8);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                z-index: 10000;
-                backdrop-filter: blur(5px);
-            `;
-
-            // Create modal content
-            const modal = document.createElement('div');
-            modal.style.cssText = `
-                background: linear-gradient(135deg, #2a2a2a, #1f1f1f);
-                border: 2px solid #ff6b35;
-                border-radius: 15px;
-                padding: 2rem;
-                max-width: 500px;
-                width: 90%;
-                text-align: center;
-                position: relative;
-                box-shadow: 0 20px 40px rgba(255, 107, 53, 0.3);
-            `;
-
-            modal.innerHTML = `
-                <button onclick="closeConnectionModal()" style="
-                    position: absolute;
-                    top: 10px;
-                    right: 15px;
-                    background: none;
-                    border: none;
-                    color: #ff6b35;
-                    font-size: 1.5rem;
-                    cursor: pointer;
-                    padding: 5px;
-                ">×</button>
-                
-                <h2 style="
-                    font-family: 'Orbitron', monospace;
-                    color: #ff6b35;
-                    margin-bottom: 1.5rem;
-                    font-size: 1.8rem;
-                ">Join Server</h2>
-                
-                <div style="
-                    background: rgba(0, 0, 0, 0.5);
-                    padding: 1rem;
-                    border-radius: 10px;
-                    margin-bottom: 2rem;
-                    border: 1px solid #444;
-                ">
-                    <p style="color: #e0e0e0; margin-bottom: 0.5rem;">Server Address:</p>
-                    <p style="
-                        color: #ff6b35;
-                        font-family: 'Orbitron', monospace;
-                        font-size: 1.2rem;
-                        font-weight: bold;
-                    ">${ip}:${port}</p>
-                </div>
-
-                <div style="margin-bottom: 2rem;">
-                    <h3 style="color: #ff6b35; margin-bottom: 1rem;">Choose Connection Method:</h3>
-                    
-                    <button onclick="launchDayZ('${ip}', '${port}')" style="
-                        background: linear-gradient(45deg, #ff6b35, #ff8c42);
-                        color: white;
-                        padding: 12px 24px;
-                        border: none;
-                        border-radius: 25px;
-                        font-size: 1rem;
-                        font-weight: 600;
-                        cursor: pointer;
-                        margin: 0.5rem;
-                        transition: all 0.3s ease;
-                        display: block;
-                        width: 100%;
-                        margin-bottom: 1rem;
-                    " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-                        🎮 Launch DayZ (Steam)
-                    </button>
-                    
-                    <button onclick="copyServerInfo('${ip}:${port}')" style="
-                        background: transparent;
-                        color: #ff6b35;
-                        padding: 12px 24px;
-                        border: 2px solid #ff6b35;
-                        border-radius: 25px;
-                        font-size: 1rem;
-                        font-weight: 600;
-                        cursor: pointer;
-                        margin: 0.5rem;
-                        transition: all 0.3s ease;
-                        display: block;
-                        width: 100%;
-                        margin-bottom: 1rem;
-                    " onmouseover="this.style.background='#ff6b35'; this.style.color='white'" onmouseout="this.style.background='transparent'; this.style.color='#ff6b35'">
-                        📋 Copy Server Address
-                    </button>
-                    
-                    <button onclick="showManualInstructions('${ip}', '${port}')" style="
-                        background: transparent;
-                        color: #ccc;
-                        padding: 8px 16px;
-                        border: 1px solid #666;
-                        border-radius: 20px;
-                        font-size: 0.9rem;
-                        cursor: pointer;
-                        transition: all 0.3s ease;
-                        display: block;
-                        width: 100%;
-                    " onmouseover="this.style.borderColor='#ff6b35'; this.style.color='#ff6b35'" onmouseout="this.style.borderColor='#666'; this.style.color='#ccc'">
-                        📖 Manual Connection Guide
-                    </button>
-                </div>
-            `;
-
-            modalOverlay.appendChild(modal);
-            document.body.appendChild(modalOverlay);
-            modalOverlay.id = 'connectionModal';
-        }
-
-        // Close connection modal
-        function closeConnectionModal() {
-            const modal = document.getElementById('connectionModal');
-            if (modal) {
-                modal.remove();
-            }
-        }
-
-        // Launch DayZ through Steam
-        function launchDayZ(ip, port) {
-            // Try to launch DayZ through Steam protocol
-            const steamUrl = `steam://connect/${ip}:${port}`;
-            
-            // Create a temporary link and click it
-            const link = document.createElement('a');
-            link.href = steamUrl;
-            link.style.display = 'none';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            // Show confirmation message
-            setTimeout(() => {
-                alert('🎮 Launching DayZ...\n\nIf DayZ doesn\'t launch automatically:\n1. Make sure Steam is running\n2. Try the manual connection method\n3. Check if DayZ is installed');
-                closeConnectionModal();
-            }, 500);
-        }
-
-        // Copy server information to clipboard
-        async function copyServerInfo(serverAddress) {
-            try {
-                await navigator.clipboard.writeText(serverAddress);
-                
-                // Show success message
-                const button = event.target;
-                const originalText = button.innerHTML;
-                button.innerHTML = '✅ Copied!';
-                button.style.background = '#4ade80';
-                button.style.borderColor = '#4ade80';
-                button.style.color = 'white';
-                
-                setTimeout(() => {
-                    button.innerHTML = originalText;
-                    button.style.background = 'transparent';
-                    button.style.borderColor = '#ff6b35';
-                    button.style.color = '#ff6b35';
-                }, 2000);
-                
-            } catch (err) {
-                // Fallback for older browsers
-                const textArea = document.createElement('textarea');
-                textArea.value = serverAddress;
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textArea);
-                
-                alert('Server address copied to clipboard!');
-            }
-        }
-
-        // Show manual connection instructions
-        function showManualInstructions(ip, port) {
-            const instructionsModal = document.createElement('div');
-            instructionsModal.style.cssText = `
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.9);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                z-index: 10001;
-                backdrop-filter: blur(5px);
-            `;
-
-            const content = document.createElement('div');
-            content.style.cssText = `
-                background: linear-gradient(135deg, #2a2a2a, #1f1f1f);
-                border: 2px solid #ff6b35;
-                border-radius: 15px;
-                padding: 2rem;
-                max-width: 600px;
-                width: 90%;
-                max-height: 80vh;
-                overflow-y: auto;
-                position: relative;
-                box-shadow: 0 20px 40px rgba(255, 107, 53, 0.3);
-            `;
-
-            content.innerHTML = `
-                <button onclick="this.parentElement.parentElement.remove()" style="
-                    position: absolute;
-                    top: 10px;
-                    right: 15px;
-                    background: none;
-                    border: none;
-                    color: #ff6b35;
-                    font-size: 1.5rem;
-                    cursor: pointer;
-                    padding: 5px;
-                ">×</button>
-                
-                <h2 style="
-                    font-family: 'Orbitron', monospace;
-                    color: #ff6b35;
-                    margin-bottom: 1.5rem;
-                    font-size: 1.8rem;
-                ">Manual Connection Guide</h2>
-                
-                <div style="text-align: left; color: #e0e0e0; line-height: 1.6;">
-                    <h3 style="color: #ff6b35; margin: 1.5rem 0 1rem 0;">Method 1: Steam Server Browser</h3>
-                    <ol style="margin-left: 1.5rem;">
-                        <li>Open Steam and go to View → Servers</li>
-                        <li>Click on "Favorites" tab</li>
-                        <li>Click "Add a Server"</li>
-                        <li>Enter: <strong style="color: #ff6b35;">${ip}:${port}</strong></li>
-                        <li>Click "Add this address to favorites"</li>
-                        <li>Double-click the server to join</li>
-                    </ol>
-                    
-                    <h3 style="color: #ff6b35; margin: 1.5rem 0 1rem 0;">Method 2: DayZ In-Game Browser</h3>
-                    <ol style="margin-left: 1.5rem;">
-                        <li>Launch DayZ</li>
-                        <li>Click "Play" → "Server Browser"</li>
-                        <li>Click "Remote" tab</li>
-                        <li>Enter IP: <strong style="color: #ff6b35;">${ip}</strong></li>
-                        <li>Enter Port: <strong style="color: #ff6b35;">${port}</strong></li>
-                        <li>Click "OK" to connect</li>
-                    </ol>
-                    
-                    <h3 style="color: #ff6b35; margin: 1.5rem 0 1rem 0;">Method 3: Steam Console</h3>
-                    <ol style="margin-left: 1.5rem;">
-                        <li>Press Windows + R</li>
-                        <li>Type: <code style="background: #1a1a1a; padding: 2px 6px; border-radius: 4px;">steam://connect/${ip}:${port}</code></li>
-                        <li>Press Enter</li>
-                    </ol>
-                    
-                    <div style="
-                        background: rgba(255, 107, 53, 0.1);
-                        border: 1px solid rgba(255, 107, 53, 0.3);
-                        border-radius: 10px;
-                        padding: 1rem;
-                        margin-top: 1.5rem;
-                    ">
-                        <strong style="color: #ff6b35;">💡 Pro Tip:</strong> Add the server to your favorites for quick access in the future!
-                    </div>
-                </div>
-            `;
-
-            instructionsModal.appendChild(content);
-            document.body.appendChild(instructionsModal);
+        // Show DayZ connection modal
+        function showDayZConnectionModal(address) {
+            alert(`🧟 Connecting to DayZ Server\n\nServer: ${address}\n\nTo connect:\n1. Open DayZ\n2. Go to Server Browser\n3. Search for "Apocalypse Survivors"\n4. Click Connect\n\nOr use the server IP directly in the remote connect option.`);
         }
 
         // Admin panel functions
@@ -1130,27 +1700,27 @@
             
             if (password === config.adminPassword) {
                 adminControls.style.display = 'block';
-                alert('Admin access granted!');
+                alert('🔓 Admin access granted! Welcome to the control panel.');
             } else {
-                alert('Invalid password!');
+                alert('❌ Invalid password! Access denied.');
             }
         }
 
         function addServer() {
             const name = document.getElementById('serverNameInput').value;
             const ip = document.getElementById('serverIPInput').value;
-            const port = document.getElementById('serverPortInput').value;
             const maxPlayers = parseInt(document.getElementById('maxPlayersInput').value);
             const status = document.getElementById('serverStatusInput').value;
 
-            if (name && ip && port && maxPlayers) {
+            if (name && ip && maxPlayers) {
                 config.servers.push({
                     name: name,
                     ip: ip,
-                    port: port,
                     players: status === 'online' ? Math.floor(Math.random() * maxPlayers) : 0,
                     maxPlayers: maxPlayers,
-                    status: status
+                    status: status,
+                    queue: status === 'online' ? Math.floor(Math.random() * 5) : 0,
+                    uptime: status === 'online' ? '99.1%' : 'N/A'
                 });
 
                 renderServers();
@@ -1158,12 +1728,11 @@
                 // Clear form
                 document.getElementById('serverNameInput').value = '';
                 document.getElementById('serverIPInput').value = '';
-                document.getElementById('serverPortInput').value = '';
                 document.getElementById('maxPlayersInput').value = '';
                 
-                alert('Server added successfully!');
+                alert('✅ Server added successfully to Apocalypse Survivors network!');
             } else {
-                alert('Please fill in all fields!');
+                alert('⚠️ Please fill in all required fields!');
             }
         }
 
@@ -1177,775 +1746,30 @@
             if (newDescription) config.heroDescription = newDescription;
 
             updateThemeElements();
-            alert('Theme updated successfully!');
+            alert('🎨 Theme updated successfully!');
         }
 
         // Community link functions
         function openDiscord() {
-            // Opens your Discord server
-            window.open('https://discord.gg/qE8qJ87CY6', '_blank');
+            window.open('https://discord.gg/apocalypsesurvivors', '_blank');
         }
 
-        function openSteamGroup() {
-            // Opens DayZ Official Steam Group as placeholder
-            window.open('https://steamcommunity.com/app/221100', '_blank');
+        function openSteam() {
+            window.open('https://steamcommunity.com/groups/apocalypsesurvivors', '_blank');
         }
 
         function openForums() {
-            // Show forums mockup modal
-            showForumsModal();
-        }
-
-        // Forums mockup modal
-        function showForumsModal() {
-            const modalOverlay = document.createElement('div');
-            modalOverlay.style.cssText = `
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.9);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                z-index: 10000;
-                backdrop-filter: blur(5px);
-            `;
-
-            const modal = document.createElement('div');
-            modal.style.cssText = `
-                background: linear-gradient(135deg, #2a2a2a, #1f1f1f);
-                border: 2px solid #ff6b35;
-                border-radius: 15px;
-                padding: 0;
-                max-width: 900px;
-                width: 95%;
-                max-height: 90vh;
-                overflow: hidden;
-                position: relative;
-                box-shadow: 0 20px 40px rgba(255, 107, 53, 0.3);
-            `;
-
-            modal.innerHTML = `
-                <button onclick="this.parentElement.parentElement.remove()" style="
-                    position: absolute;
-                    top: 15px;
-                    right: 20px;
-                    background: none;
-                    border: none;
-                    color: #ff6b35;
-                    font-size: 1.8rem;
-                    cursor: pointer;
-                    padding: 5px;
-                    z-index: 10001;
-                ">×</button>
-                
-                <!-- Forum Header -->
-                <div style="
-                    background: linear-gradient(45deg, #ff6b35, #ff8c42);
-                    padding: 2rem;
-                    text-align: center;
-                ">
-                    <h1 style="
-                        font-family: 'Orbitron', monospace;
-                        color: white;
-                        margin: 0;
-                        font-size: 2rem;
-                        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-                    ">🏛️ DayZ Server Forums</h1>
-                    <p style="color: rgba(255, 255, 255, 0.9); margin: 0.5rem 0 0 0;">
-                        Community discussions, guides, and server updates
-                    </p>
-                </div>
-
-                <!-- Forum Navigation -->
-                <div style="
-                    background: rgba(0, 0, 0, 0.5);
-                    padding: 1rem 2rem;
-                    border-bottom: 1px solid #444;
-                    display: flex;
-                    gap: 2rem;
-                    flex-wrap: wrap;
-                    justify-content: center;
-                ">
-                    <span style="color: #ff6b35; font-weight: bold;">📋 General</span>
-                    <span style="color: #ccc; cursor: pointer;" onmouseover="this.style.color='#ff6b35'" onmouseout="this.style.color='#ccc'">🎮 Gameplay</span>
-                    <span style="color: #ccc; cursor: pointer;" onmouseover="this.style.color='#ff6b35'" onmouseout="this.style.color='#ccc'">🏗️ Base Building</span>
-                    <span style="color: #ccc; cursor: pointer;" onmouseover="this.style.color='#ff6b35'" onmouseout="this.style.color='#ccc'">🎯 Events</span>
-                    <span style="color: #ccc; cursor: pointer;" onmouseover="this.style.color='#ff6b35'" onmouseout="this.style.color='#ccc'">🛠️ Support</span>
-                </div>
-
-                <!-- Forum Content -->
-                <div style="
-                    padding: 2rem;
-                    max-height: 60vh;
-                    overflow-y: auto;
-                    color: #e0e0e0;
-                ">
-                    <!-- Forum Stats -->
-                    <div style="
-                        display: grid;
-                        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-                        gap: 1rem;
-                        margin-bottom: 2rem;
-                    ">
-                        <div style="
-                            background: rgba(255, 107, 53, 0.1);
-                            border: 1px solid rgba(255, 107, 53, 0.3);
-                            border-radius: 10px;
-                            padding: 1rem;
-                            text-align: center;
-                        ">
-                            <div style="font-size: 1.5rem; color: #ff6b35; font-weight: bold;">1,247</div>
-                            <div style="font-size: 0.9rem; color: #ccc;">Total Posts</div>
-                        </div>
-                        <div style="
-                            background: rgba(255, 107, 53, 0.1);
-                            border: 1px solid rgba(255, 107, 53, 0.3);
-                            border-radius: 10px;
-                            padding: 1rem;
-                            text-align: center;
-                        ">
-                            <div style="font-size: 1.5rem; color: #ff6b35; font-weight: bold;">342</div>
-                            <div style="font-size: 0.9rem; color: #ccc;">Active Members</div>
-                        </div>
-                        <div style="
-                            background: rgba(255, 107, 53, 0.1);
-                            border: 1px solid rgba(255, 107, 53, 0.3);
-                            border-radius: 10px;
-                            padding: 1rem;
-                            text-align: center;
-                        ">
-                            <div style="font-size: 1.5rem; color: #ff6b35; font-weight: bold;">89</div>
-                            <div style="font-size: 0.9rem; color: #ccc;">Topics Today</div>
-                        </div>
-                    </div>
-
-                    <!-- Recent Topics -->
-                    <h3 style="color: #ff6b35; margin-bottom: 1rem; font-family: 'Orbitron', monospace;">
-                        🔥 Hot Topics
-                    </h3>
-                    
-                    <div style="space-y: 1rem;">
-                        <!-- Topic 1 -->
-                        <div style="
-                            background: rgba(0, 0, 0, 0.3);
-                            border: 1px solid #444;
-                            border-radius: 10px;
-                            padding: 1.5rem;
-                            margin-bottom: 1rem;
-                            transition: all 0.3s ease;
-                            cursor: pointer;
-                        " onmouseover="this.style.borderColor='#ff6b35'; this.style.background='rgba(255, 107, 53, 0.05)'" onmouseout="this.style.borderColor='#444'; this.style.background='rgba(0, 0, 0, 0.3)'">
-                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
-                                <h4 style="color: #ff6b35; margin: 0; font-size: 1.1rem;">
-                                    📌 Server Wipe Schedule - December 2024
-                                </h4>
-                                <span style="
-                                    background: #ff6b35;
-                                    color: white;
-                                    padding: 2px 8px;
-                                    border-radius: 12px;
-                                    font-size: 0.8rem;
-                                    font-weight: bold;
-                                ">PINNED</span>
-                            </div>
-                            <p style="color: #ccc; margin: 0.5rem 0; line-height: 1.4;">
-                                Official announcement about the upcoming server wipe and new features being added...
-                            </p>
-                            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; color: #888;">
-                                <span>👤 ServerAdmin • 💬 23 replies</span>
-                                <span>⏰ 2 hours ago</span>
-                            </div>
-                        </div>
-
-                        <!-- Topic 2 -->
-                        <div style="
-                            background: rgba(0, 0, 0, 0.3);
-                            border: 1px solid #444;
-                            border-radius: 10px;
-                            padding: 1.5rem;
-                            margin-bottom: 1rem;
-                            transition: all 0.3s ease;
-                            cursor: pointer;
-                        " onmouseover="this.style.borderColor='#ff6b35'; this.style.background='rgba(255, 107, 53, 0.05)'" onmouseout="this.style.borderColor='#444'; this.style.background='rgba(0, 0, 0, 0.3)'">
-                            <h4 style="color: #e0e0e0; margin: 0 0 0.5rem 0; font-size: 1.1rem;">
-                                🏗️ Best Base Building Locations - Updated Guide
-                            </h4>
-                            <p style="color: #ccc; margin: 0.5rem 0; line-height: 1.4;">
-                                Comprehensive guide to the best base building spots with pros and cons for each location...
-                            </p>
-                            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; color: #888;">
-                                <span>👤 SurvivalPro • 💬 45 replies</span>
-                                <span>⏰ 5 hours ago</span>
-                            </div>
-                        </div>
-
-                        <!-- Topic 3 -->
-                        <div style="
-                            background: rgba(0, 0, 0, 0.3);
-                            border: 1px solid #444;
-                            border-radius: 10px;
-                            padding: 1.5rem;
-                            margin-bottom: 1rem;
-                            transition: all 0.3s ease;
-                            cursor: pointer;
-                        " onmouseover="this.style.borderColor='#ff6b35'; this.style.background='rgba(255, 107, 53, 0.05)'" onmouseout="this.style.borderColor='#444'; this.style.background='rgba(0, 0, 0, 0.3)'">
-                            <h4 style="color: #e0e0e0; margin: 0 0 0.5rem 0; font-size: 1.1rem;">
-                                🎯 Weekend PvP Tournament - Sign Up Now!
-                            </h4>
-                            <p style="color: #ccc; margin: 0.5rem 0; line-height: 1.4;">
-                                Join our weekend PvP tournament with amazing prizes! Registration closes Friday...
-                            </p>
-                            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; color: #888;">
-                                <span>👤 EventManager • 💬 67 replies</span>
-                                <span>⏰ 1 day ago</span>
-                            </div>
-                        </div>
-
-                        <!-- Topic 4 -->
-                        <div style="
-                            background: rgba(0, 0, 0, 0.3);
-                            border: 1px solid #444;
-                            border-radius: 10px;
-                            padding: 1.5rem;
-                            margin-bottom: 1rem;
-                            transition: all 0.3s ease;
-                            cursor: pointer;
-                        " onmouseover="this.style.borderColor='#ff6b35'; this.style.background='rgba(255, 107, 53, 0.05)'" onmouseout="this.style.borderColor='#444'; this.style.background='rgba(0, 0, 0, 0.3)'">
-                            <h4 style="color: #e0e0e0; margin: 0 0 0.5rem 0; font-size: 1.1rem;">
-                                🤝 Looking for Group - Friendly Players Welcome
-                            </h4>
-                            <p style="color: #ccc; margin: 0.5rem 0; line-height: 1.4;">
-                                Experienced player looking for 2-3 teammates for base building and exploration...
-                            </p>
-                            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; color: #888;">
-                                <span>👤 LoneWanderer • 💬 12 replies</span>
-                                <span>⏰ 2 days ago</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Call to Action -->
-                    <div style="
-                        background: linear-gradient(45deg, rgba(255, 107, 53, 0.1), rgba(255, 140, 66, 0.1));
-                        border: 1px solid rgba(255, 107, 53, 0.3);
-                        border-radius: 15px;
-                        padding: 2rem;
-                        text-align: center;
-                        margin-top: 2rem;
-                    ">
-                        <h3 style="color: #ff6b35; margin-bottom: 1rem; font-family: 'Orbitron', monospace;">
-                            Join the Discussion!
-                        </h3>
-                        <p style="color: #ccc; margin-bottom: 1.5rem;">
-                            This is a mockup of what your server forums could look like. 
-                            Connect with your community, share strategies, and stay updated!
-                        </p>
-                        <button style="
-                            background: linear-gradient(45deg, #ff6b35, #ff8c42);
-                            color: white;
-                            padding: 12px 30px;
-                            border: none;
-                            border-radius: 25px;
-                            font-size: 1rem;
-                            font-weight: 600;
-                            cursor: pointer;
-                            transition: all 0.3s ease;
-                        " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'" onclick="alert('This is a mockup! In a real implementation, this would redirect to your actual forums.')">
-                            🚀 Create Real Forums
-                        </button>
-                    </div>
-                </div>
-            `;
-
-            modalOverlay.appendChild(modal);
-            document.body.appendChild(modalOverlay);
+            alert('Community Forums Demo\n\nThis would show a DayZ community forum with survival guides, base showcases, and player stories in a real implementation.');
         }
 
         // Demo function for remaining non-functional links
         function showDemo(feature) {
-            if (feature === 'Donations') {
-                showDonationsModal();
-            } else if (feature === 'Contact') {
-                showContactModal();
+            if (feature === 'Contact') {
+                alert(`${feature} Demo\n\nThis is a DayZ server template demonstration. In a real implementation, this would show admin contact information or a support ticket system.`);
             } else {
-                alert(`${feature} Demo\n\nThis is a template demonstration. In a real implementation, this would link to your ${feature.toLowerCase()}.`);
+                alert(`${feature} Demo\n\nThis is a DayZ server template demonstration. In a real implementation, this would connect to your ${feature.toLowerCase()} system.`);
             }
         }
-
-        // Donations mockup modal
-        function showDonationsModal() {
-            const modalOverlay = document.createElement('div');
-            modalOverlay.style.cssText = `
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.9);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                z-index: 10000;
-                backdrop-filter: blur(5px);
-            `;
-
-            const modal = document.createElement('div');
-            modal.style.cssText = `
-                background: linear-gradient(135deg, #2a2a2a, #1f1f1f);
-                border: 2px solid #ff6b35;
-                border-radius: 15px;
-                padding: 0;
-                max-width: 800px;
-                width: 95%;
-                max-height: 90vh;
-                overflow: hidden;
-                position: relative;
-                box-shadow: 0 20px 40px rgba(255, 107, 53, 0.3);
-            `;
-
-            modal.innerHTML = `
-                <button onclick="this.parentElement.parentElement.remove()" style="
-                    position: absolute;
-                    top: 15px;
-                    right: 20px;
-                    background: none;
-                    border: none;
-                    color: #ff6b35;
-                    font-size: 1.8rem;
-                    cursor: pointer;
-                    padding: 5px;
-                    z-index: 10001;
-                ">×</button>
-                
-                <!-- Donations Header -->
-                <div style="
-                    background: linear-gradient(45deg, #ff6b35, #ff8c42);
-                    padding: 2rem;
-                    text-align: center;
-                ">
-                    <h1 style="
-                        font-family: 'Orbitron', monospace;
-                        color: white;
-                        margin: 0;
-                        font-size: 2rem;
-                        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-                    ">💝 Support Our Server</h1>
-                    <p style="color: rgba(255, 255, 255, 0.9); margin: 0.5rem 0 0 0;">
-                        Help us keep the servers running and improve your gaming experience
-                    </p>
-                </div>
-
-                <!-- Donations Content -->
-                <div style="
-                    padding: 2rem;
-                    max-height: 70vh;
-                    overflow-y: auto;
-                    color: #e0e0e0;
-                ">
-                    <!-- Why Donate Section -->
-                    <div style="
-                        background: rgba(255, 107, 53, 0.1);
-                        border: 1px solid rgba(255, 107, 53, 0.3);
-                        border-radius: 15px;
-                        padding: 1.5rem;
-                        margin-bottom: 2rem;
-                        text-align: center;
-                    ">
-                        <h3 style="color: #ff6b35; margin-bottom: 1rem; font-family: 'Orbitron', monospace;">
-                            🎯 Why Your Support Matters
-                        </h3>
-                        <div style="
-                            display: grid;
-                            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-                            gap: 1rem;
-                            margin-top: 1rem;
-                        ">
-                            <div style="text-align: center;">
-                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🖥️</div>
-                                <div style="font-weight: bold; color: #ff6b35;">Server Hosting</div>
-                                <div style="font-size: 0.9rem; color: #ccc;">High-performance dedicated servers</div>
-                            </div>
-                            <div style="text-align: center;">
-                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔧</div>
-                                <div style="font-weight: bold; color: #ff6b35;">Maintenance</div>
-                                <div style="font-size: 0.9rem; color: #ccc;">Regular updates and bug fixes</div>
-                            </div>
-                            <div style="text-align: center;">
-                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎮</div>
-                                <div style="font-weight: bold; color: #ff6b35;">New Features</div>
-                                <div style="font-size: 0.9rem; color: #ccc;">Custom mods and improvements</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Donation Tiers -->
-                    <h3 style="color: #ff6b35; margin-bottom: 1.5rem; font-family: 'Orbitron', monospace; text-align: center;">
-                        🏆 Supporter Tiers
-                    </h3>
-                    
-                    <div style="
-                        display: grid;
-                        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-                        gap: 1.5rem;
-                        margin-bottom: 2rem;
-                    ">
-                        <!-- Bronze Tier -->
-                        <div style="
-                            background: linear-gradient(135deg, rgba(205, 127, 50, 0.2), rgba(160, 82, 45, 0.2));
-                            border: 2px solid #cd7f32;
-                            border-radius: 15px;
-                            padding: 1.5rem;
-                            text-align: center;
-                            transition: all 0.3s ease;
-                            cursor: pointer;
-                        " onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 30px rgba(205, 127, 50, 0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'" onclick="selectDonationAmount(5)">
-                            <div style="font-size: 2.5rem; margin-bottom: 1rem;">🥉</div>
-                            <h4 style="color: #cd7f32; margin-bottom: 0.5rem; font-family: 'Orbitron', monospace;">Bronze Supporter</h4>
-                            <div style="font-size: 1.8rem; font-weight: bold; color: #cd7f32; margin-bottom: 1rem;">$5</div>
-                            <ul style="list-style: none; padding: 0; color: #ccc; font-size: 0.9rem;">
-                                <li style="margin-bottom: 0.5rem;">✅ Supporter Badge</li>
-                                <li style="margin-bottom: 0.5rem;">✅ Priority Queue</li>
-                                <li style="margin-bottom: 0.5rem;">✅ Discord Role</li>
-                            </ul>
-                        </div>
-
-                        <!-- Silver Tier -->
-                        <div style="
-                            background: linear-gradient(135deg, rgba(192, 192, 192, 0.2), rgba(169, 169, 169, 0.2));
-                            border: 2px solid #c0c0c0;
-                            border-radius: 15px;
-                            padding: 1.5rem;
-                            text-align: center;
-                            transition: all 0.3s ease;
-                            cursor: pointer;
-                        " onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 30px rgba(192, 192, 192, 0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'" onclick="selectDonationAmount(15)">
-                            <div style="font-size: 2.5rem; margin-bottom: 1rem;">🥈</div>
-                            <h4 style="color: #c0c0c0; margin-bottom: 0.5rem; font-family: 'Orbitron', monospace;">Silver Supporter</h4>
-                            <div style="font-size: 1.8rem; font-weight: bold; color: #c0c0c0; margin-bottom: 1rem;">$15</div>
-                            <ul style="list-style: none; padding: 0; color: #ccc; font-size: 0.9rem;">
-                                <li style="margin-bottom: 0.5rem;">✅ All Bronze Benefits</li>
-                                <li style="margin-bottom: 0.5rem;">✅ Reserved Slot</li>
-                                <li style="margin-bottom: 0.5rem;">✅ Custom Name Color</li>
-                                <li style="margin-bottom: 0.5rem;">✅ Starter Kit</li>
-                            </ul>
-                        </div>
-
-                        <!-- Gold Tier -->
-                        <div style="
-                            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 193, 7, 0.2));
-                            border: 2px solid #ffd700;
-                            border-radius: 15px;
-                            padding: 1.5rem;
-                            text-align: center;
-                            transition: all 0.3s ease;
-                            cursor: pointer;
-                            position: relative;
-                        " onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 30px rgba(255, 215, 0, 0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'" onclick="selectDonationAmount(30)">
-                            <div style="
-                                position: absolute;
-                                top: -10px;
-                                right: -10px;
-                                background: #ff6b35;
-                                color: white;
-                                padding: 5px 10px;
-                                border-radius: 15px;
-                                font-size: 0.8rem;
-                                font-weight: bold;
-                            ">POPULAR</div>
-                            <div style="font-size: 2.5rem; margin-bottom: 1rem;">🥇</div>
-                            <h4 style="color: #ffd700; margin-bottom: 0.5rem; font-family: 'Orbitron', monospace;">Gold Supporter</h4>
-                            <div style="font-size: 1.8rem; font-weight: bold; color: #ffd700; margin-bottom: 1rem;">$30</div>
-                            <ul style="list-style: none; padding: 0; color: #ccc; font-size: 0.9rem;">
-                                <li style="margin-bottom: 0.5rem;">✅ All Silver Benefits</li>
-                                <li style="margin-bottom: 0.5rem;">✅ VIP Discord Channel</li>
-                                <li style="margin-bottom: 0.5rem;">✅ Monthly Care Package</li>
-                                <li style="margin-bottom: 0.5rem;">✅ Base Protection (48h)</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <!-- Custom Amount -->
-                    <div style="
-                        background: rgba(0, 0, 0, 0.3);
-                        border: 1px solid #444;
-                        border-radius: 15px;
-                        padding: 1.5rem;
-                        margin-bottom: 2rem;
-                        text-align: center;
-                    ">
-                        <h4 style="color: #ff6b35; margin-bottom: 1rem; font-family: 'Orbitron', monospace;">
-                            💰 Custom Amount
-                        </h4>
-                        <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap;">
-                            <span style="color: #ccc;">$</span>
-                            <input type="number" id="customAmount" placeholder="Enter amount" min="1" style="
-                                background: #1a1a1a;
-                                border: 2px solid #444;
-                                border-radius: 8px;
-                                color: #e0e0e0;
-                                padding: 10px 15px;
-                                font-size: 1.1rem;
-                                width: 150px;
-                                text-align: center;
-                            " onfocus="this.style.borderColor='#ff6b35'" onblur="this.style.borderColor='#444'">
-                            <button onclick="selectCustomAmount()" style="
-                                background: linear-gradient(45deg, #ff6b35, #ff8c42);
-                                color: white;
-                                padding: 10px 20px;
-                                border: none;
-                                border-radius: 8px;
-                                font-weight: 600;
-                                cursor: pointer;
-                                transition: all 0.3s ease;
-                            " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-                                Select
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Payment Methods -->
-                    <div id="paymentSection" style="display: none;">
-                        <h3 style="color: #ff6b35; margin-bottom: 1.5rem; font-family: 'Orbitron', monospace; text-align: center;">
-                            💳 Choose Payment Method
-                        </h3>
-                        
-                        <div style="
-                            display: grid;
-                            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-                            gap: 1.5rem;
-                            margin-bottom: 2rem;
-                        ">
-                            <!-- Stripe Payment -->
-                            <div style="
-                                background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(79, 70, 229, 0.1));
-                                border: 2px solid #6366f1;
-                                border-radius: 15px;
-                                padding: 2rem;
-                                text-align: center;
-                                transition: all 0.3s ease;
-                                cursor: pointer;
-                            " onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 30px rgba(99, 102, 241, 0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'" onclick="processStripePayment()">
-                                <div style="font-size: 3rem; margin-bottom: 1rem;">💳</div>
-                                <h4 style="color: #6366f1; margin-bottom: 1rem; font-family: 'Orbitron', monospace;">Stripe</h4>
-                                <p style="color: #ccc; font-size: 0.9rem; margin-bottom: 1rem;">
-                                    Secure payment with credit/debit cards
-                                </p>
-                                <div style="display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1rem;">
-                                    <span style="background: #fff; color: #000; padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; font-weight: bold;">VISA</span>
-                                    <span style="background: #fff; color: #000; padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; font-weight: bold;">MC</span>
-                                    <span style="background: #fff; color: #000; padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; font-weight: bold;">AMEX</span>
-                                </div>
-                                <div style="color: #4ade80; font-size: 0.9rem; font-weight: bold;">
-                                    ✅ Instant Processing
-                                </div>
-                            </div>
-
-                            <!-- PayPal Payment -->
-                            <div style="
-                                background: linear-gradient(135deg, rgba(0, 48, 135, 0.1), rgba(0, 112, 209, 0.1));
-                                border: 2px solid #0070d1;
-                                border-radius: 15px;
-                                padding: 2rem;
-                                text-align: center;
-                                transition: all 0.3s ease;
-                                cursor: pointer;
-                            " onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 30px rgba(0, 112, 209, 0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'" onclick="processPayPalPayment()">
-                                <div style="font-size: 3rem; margin-bottom: 1rem;">🅿️</div>
-                                <h4 style="color: #0070d1; margin-bottom: 1rem; font-family: 'Orbitron', monospace;">PayPal</h4>
-                                <p style="color: #ccc; font-size: 0.9rem; margin-bottom: 1rem;">
-                                    Pay with your PayPal account or card
-                                </p>
-                                <div style="display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1rem;">
-                                    <span style="background: #0070d1; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; font-weight: bold;">PayPal</span>
-                                    <span style="background: #fff; color: #000; padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; font-weight: bold;">Cards</span>
-                                </div>
-                                <div style="color: #4ade80; font-size: 0.9rem; font-weight: bold;">
-                                    ✅ Buyer Protection
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Selected Amount Display -->
-                        <div id="selectedAmountDisplay" style="
-                            background: rgba(255, 107, 53, 0.1);
-                            border: 1px solid rgba(255, 107, 53, 0.3);
-                            border-radius: 10px;
-                            padding: 1rem;
-                            text-align: center;
-                            margin-bottom: 1rem;
-                        ">
-                            <span style="color: #ccc;">Selected Amount: </span>
-                            <span id="selectedAmountText" style="color: #ff6b35; font-weight: bold; font-size: 1.2rem;">$0</span>
-                        </div>
-                    </div>
-
-                    <!-- Security Notice -->
-                    <div style="
-                        background: rgba(74, 222, 128, 0.1);
-                        border: 1px solid rgba(74, 222, 128, 0.3);
-                        border-radius: 10px;
-                        padding: 1rem;
-                        text-align: center;
-                        margin-top: 1rem;
-                    ">
-                        <div style="color: #4ade80; font-weight: bold; margin-bottom: 0.5rem;">
-                            🔒 100% Secure & Encrypted
-                        </div>
-                        <div style="color: #ccc; font-size: 0.9rem;">
-                            All payments are processed securely. We never store your payment information.
-                        </div>
-                    </div>
-
-                    <!-- Demo Notice -->
-                    <div style="
-                        background: rgba(255, 107, 53, 0.1);
-                        border: 1px solid rgba(255, 107, 53, 0.3);
-                        border-radius: 15px;
-                        padding: 2rem;
-                        text-align: center;
-                        margin-top: 2rem;
-                    ">
-                        <h3 style="color: #ff6b35; margin-bottom: 1rem; font-family: 'Orbitron', monospace;">
-                            ⚠️ Demo Notice
-                        </h3>
-                        <p style="color: #ccc; margin-bottom: 1.5rem;">
-                            This is a mockup demonstration. In a real implementation, these buttons would connect to actual Stripe and PayPal payment processors.
-                        </p>
-                        <button style="
-                            background: linear-gradient(45deg, #ff6b35, #ff8c42);
-                            color: white;
-                            padding: 12px 30px;
-                            border: none;
-                            border-radius: 25px;
-                            font-size: 1rem;
-                            font-weight: 600;
-                            cursor: pointer;
-                            transition: all 0.3s ease;
-                        " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'" onclick="alert('In a real implementation, you would integrate with Stripe and PayPal APIs to process actual payments securely.')">
-                            🚀 Implement Real Payments
-                        </button>
-                    </div>
-                </div>
-            `;
-
-            modalOverlay.appendChild(modal);
-            document.body.appendChild(modalOverlay);
-        }
-
-        // Donation amount selection functions
-        let selectedAmount = 0;
-
-        function selectDonationAmount(amount) {
-            selectedAmount = amount;
-            document.getElementById('selectedAmountText').textContent = '$' + amount;
-            document.getElementById('paymentSection').style.display = 'block';
-            document.getElementById('paymentSection').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function selectCustomAmount() {
-            const customAmount = document.getElementById('customAmount').value;
-            if (customAmount && customAmount > 0) {
-                selectedAmount = parseFloat(customAmount);
-                document.getElementById('selectedAmountText').textContent = '$' + selectedAmount;
-                document.getElementById('paymentSection').style.display = 'block';
-                document.getElementById('paymentSection').scrollIntoView({ behavior: 'smooth' });
-            } else {
-                alert('Please enter a valid amount greater than $0');
-            }
-        }
-
-        function processStripePayment() {
-            if (selectedAmount <= 0) {
-                alert('Please select a donation amount first');
-                return;
-            }
-            
-            // Simulate Stripe payment processing
-            const processingModal = createProcessingModal('Stripe', selectedAmount);
-            document.body.appendChild(processingModal);
-            
-            setTimeout(() => {
-                processingModal.remove();
-                alert(`Demo: Stripe payment of $${selectedAmount} would be processed here.\n\nIn a real implementation, this would:\n1. Create a Stripe checkout session\n2. Redirect to Stripe's secure payment page\n3. Handle the payment confirmation\n4. Grant supporter benefits`);
-            }, 2000);
-        }
-
-        function processPayPalPayment() {
-            if (selectedAmount <= 0) {
-                alert('Please select a donation amount first');
-                return;
-            }
-            
-            // Simulate PayPal payment processing
-            const processingModal = createProcessingModal('PayPal', selectedAmount);
-            document.body.appendChild(processingModal);
-            
-            setTimeout(() => {
-                processingModal.remove();
-                alert(`Demo: PayPal payment of $${selectedAmount} would be processed here.\n\nIn a real implementation, this would:\n1. Create a PayPal payment request\n2. Redirect to PayPal's secure payment page\n3. Handle the payment confirmation\n4. Grant supporter benefits`);
-            }, 2000);
-        }
-
-        function createProcessingModal(provider, amount) {
-            const modal = document.createElement('div');
-            modal.style.cssText = `
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.9);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                z-index: 10002;
-                backdrop-filter: blur(5px);
-            `;
-            
-            modal.innerHTML = `
-                <div style="
-                    background: linear-gradient(135deg, #2a2a2a, #1f1f1f);
-                    border: 2px solid #ff6b35;
-                    border-radius: 15px;
-                    padding: 3rem;
-                    text-align: center;
-                    max-width: 400px;
-                    width: 90%;
-                ">
-                    <div class="loading" style="
-                        display: inline-block;
-                        width: 40px;
-                        height: 40px;
-                        border: 4px solid #444;
-                        border-radius: 50%;
-                        border-top-color: #ff6b35;
-                        animation: spin 1s ease-in-out infinite;
-                        margin-bottom: 1.5rem;
-                    "></div>
-                    <h3 style="color: #ff6b35; margin-bottom: 1rem; font-family: 'Orbitron', monospace;">
-                        Processing Payment
-                    </h3>
-                    <p style="color: #ccc; margin-bottom: 0.5rem;">
-                        Connecting to ${provider}...
-                    </p>
-                    <p style="color: #ff6b35; font-weight: bold; font-size: 1.2rem;">
-                        $${amount}
-                    </p>
-                </div>
-            `;
-            
-            return modal;
-        }
-
-        // Contact modal function
-        function showContactModal() {
-            alert('Contact Demo\n\nThis would show a contact form or support information in a real implementation.');
-        }
-
-
 
         // Smooth scrolling for navigation
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -1962,7 +1786,7 @@
         });
 
         // Anti-debugging and theft protection
-        (function(){let _0x3f2a=0;setInterval(function(){if(_0x3f2a++>100){console.clear();_0x3f2a=0;}},1000);})();
+        (function(){let _0x8f5b=0;setInterval(function(){if(_0x8f5b++>100){console.clear();_0x8f5b=0;}},1000);})();
         
         // Disable right-click context menu
         document.addEventListener('contextmenu',function(e){e.preventDefault();});
@@ -1973,17 +1797,17 @@
         // Initialize website when page loads
         document.addEventListener('DOMContentLoaded', initializeWebsite);
 
-        // Add some interactive effects
+        // Add DayZ-themed cursor effect
         document.addEventListener('mousemove', (e) => {
-            const cursor = document.querySelector('.cursor');
+            const cursor = document.querySelector('.dayz-cursor');
             if (!cursor) {
                 const newCursor = document.createElement('div');
-                newCursor.className = 'cursor';
+                newCursor.className = 'dayz-cursor';
                 newCursor.style.cssText = `
                     position: fixed;
-                    width: 20px;
-                    height: 20px;
-                    background: radial-gradient(circle, rgba(255,107,53,0.3) 0%, transparent 70%);
+                    width: 30px;
+                    height: 30px;
+                    background: radial-gradient(circle, rgba(220,53,69,0.4) 0%, transparent 70%);
                     border-radius: 50%;
                     pointer-events: none;
                     z-index: 9999;
@@ -1992,10 +1816,10 @@
                 document.body.appendChild(newCursor);
             }
             
-            const cursorElement = document.querySelector('.cursor');
-            cursorElement.style.left = e.clientX - 10 + 'px';
-            cursorElement.style.top = e.clientY - 10 + 'px';
+            const cursorElement = document.querySelector('.dayz-cursor');
+            cursorElement.style.left = e.clientX - 15 + 'px';
+            cursorElement.style.top = e.clientY - 15 + 'px';
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'967d848146c1b40c',t:'MTc1Mzk2OTMzMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'967e6565d2390d7f',t:'MTc1Mzk3ODU0My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
