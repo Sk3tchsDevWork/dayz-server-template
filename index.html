@@ -836,8 +836,295 @@
 
         // Connect to server function
         function connectToServer(serverAddress) {
-            // In a real implementation, this would launch DayZ with the server IP
-            alert(`Connecting to server: ${serverAddress}\n\nIn a real implementation, this would launch DayZ with the server connection details.`);
+            const [ip, port] = serverAddress.split(':');
+            
+            // Show connection modal
+            showConnectionModal(ip, port);
+        }
+
+        // Show connection modal with multiple join options
+        function showConnectionModal(ip, port) {
+            // Create modal overlay
+            const modalOverlay = document.createElement('div');
+            modalOverlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10000;
+                backdrop-filter: blur(5px);
+            `;
+
+            // Create modal content
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                background: linear-gradient(135deg, #2a2a2a, #1f1f1f);
+                border: 2px solid #ff6b35;
+                border-radius: 15px;
+                padding: 2rem;
+                max-width: 500px;
+                width: 90%;
+                text-align: center;
+                position: relative;
+                box-shadow: 0 20px 40px rgba(255, 107, 53, 0.3);
+            `;
+
+            modal.innerHTML = `
+                <button onclick="closeConnectionModal()" style="
+                    position: absolute;
+                    top: 10px;
+                    right: 15px;
+                    background: none;
+                    border: none;
+                    color: #ff6b35;
+                    font-size: 1.5rem;
+                    cursor: pointer;
+                    padding: 5px;
+                ">×</button>
+                
+                <h2 style="
+                    font-family: 'Orbitron', monospace;
+                    color: #ff6b35;
+                    margin-bottom: 1.5rem;
+                    font-size: 1.8rem;
+                ">Join Server</h2>
+                
+                <div style="
+                    background: rgba(0, 0, 0, 0.5);
+                    padding: 1rem;
+                    border-radius: 10px;
+                    margin-bottom: 2rem;
+                    border: 1px solid #444;
+                ">
+                    <p style="color: #e0e0e0; margin-bottom: 0.5rem;">Server Address:</p>
+                    <p style="
+                        color: #ff6b35;
+                        font-family: 'Orbitron', monospace;
+                        font-size: 1.2rem;
+                        font-weight: bold;
+                    ">${ip}:${port}</p>
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="color: #ff6b35; margin-bottom: 1rem;">Choose Connection Method:</h3>
+                    
+                    <button onclick="launchDayZ('${ip}', '${port}')" style="
+                        background: linear-gradient(45deg, #ff6b35, #ff8c42);
+                        color: white;
+                        padding: 12px 24px;
+                        border: none;
+                        border-radius: 25px;
+                        font-size: 1rem;
+                        font-weight: 600;
+                        cursor: pointer;
+                        margin: 0.5rem;
+                        transition: all 0.3s ease;
+                        display: block;
+                        width: 100%;
+                        margin-bottom: 1rem;
+                    " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                        🎮 Launch DayZ (Steam)
+                    </button>
+                    
+                    <button onclick="copyServerInfo('${ip}:${port}')" style="
+                        background: transparent;
+                        color: #ff6b35;
+                        padding: 12px 24px;
+                        border: 2px solid #ff6b35;
+                        border-radius: 25px;
+                        font-size: 1rem;
+                        font-weight: 600;
+                        cursor: pointer;
+                        margin: 0.5rem;
+                        transition: all 0.3s ease;
+                        display: block;
+                        width: 100%;
+                        margin-bottom: 1rem;
+                    " onmouseover="this.style.background='#ff6b35'; this.style.color='white'" onmouseout="this.style.background='transparent'; this.style.color='#ff6b35'">
+                        📋 Copy Server Address
+                    </button>
+                    
+                    <button onclick="showManualInstructions('${ip}', '${port}')" style="
+                        background: transparent;
+                        color: #ccc;
+                        padding: 8px 16px;
+                        border: 1px solid #666;
+                        border-radius: 20px;
+                        font-size: 0.9rem;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        display: block;
+                        width: 100%;
+                    " onmouseover="this.style.borderColor='#ff6b35'; this.style.color='#ff6b35'" onmouseout="this.style.borderColor='#666'; this.style.color='#ccc'">
+                        📖 Manual Connection Guide
+                    </button>
+                </div>
+            `;
+
+            modalOverlay.appendChild(modal);
+            document.body.appendChild(modalOverlay);
+            modalOverlay.id = 'connectionModal';
+        }
+
+        // Close connection modal
+        function closeConnectionModal() {
+            const modal = document.getElementById('connectionModal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        // Launch DayZ through Steam
+        function launchDayZ(ip, port) {
+            // Try to launch DayZ through Steam protocol
+            const steamUrl = `steam://connect/${ip}:${port}`;
+            
+            // Create a temporary link and click it
+            const link = document.createElement('a');
+            link.href = steamUrl;
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Show confirmation message
+            setTimeout(() => {
+                alert('🎮 Launching DayZ...\n\nIf DayZ doesn\'t launch automatically:\n1. Make sure Steam is running\n2. Try the manual connection method\n3. Check if DayZ is installed');
+                closeConnectionModal();
+            }, 500);
+        }
+
+        // Copy server information to clipboard
+        async function copyServerInfo(serverAddress) {
+            try {
+                await navigator.clipboard.writeText(serverAddress);
+                
+                // Show success message
+                const button = event.target;
+                const originalText = button.innerHTML;
+                button.innerHTML = '✅ Copied!';
+                button.style.background = '#4ade80';
+                button.style.borderColor = '#4ade80';
+                button.style.color = 'white';
+                
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.style.background = 'transparent';
+                    button.style.borderColor = '#ff6b35';
+                    button.style.color = '#ff6b35';
+                }, 2000);
+                
+            } catch (err) {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = serverAddress;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                alert('Server address copied to clipboard!');
+            }
+        }
+
+        // Show manual connection instructions
+        function showManualInstructions(ip, port) {
+            const instructionsModal = document.createElement('div');
+            instructionsModal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.9);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10001;
+                backdrop-filter: blur(5px);
+            `;
+
+            const content = document.createElement('div');
+            content.style.cssText = `
+                background: linear-gradient(135deg, #2a2a2a, #1f1f1f);
+                border: 2px solid #ff6b35;
+                border-radius: 15px;
+                padding: 2rem;
+                max-width: 600px;
+                width: 90%;
+                max-height: 80vh;
+                overflow-y: auto;
+                position: relative;
+                box-shadow: 0 20px 40px rgba(255, 107, 53, 0.3);
+            `;
+
+            content.innerHTML = `
+                <button onclick="this.parentElement.parentElement.remove()" style="
+                    position: absolute;
+                    top: 10px;
+                    right: 15px;
+                    background: none;
+                    border: none;
+                    color: #ff6b35;
+                    font-size: 1.5rem;
+                    cursor: pointer;
+                    padding: 5px;
+                ">×</button>
+                
+                <h2 style="
+                    font-family: 'Orbitron', monospace;
+                    color: #ff6b35;
+                    margin-bottom: 1.5rem;
+                    font-size: 1.8rem;
+                ">Manual Connection Guide</h2>
+                
+                <div style="text-align: left; color: #e0e0e0; line-height: 1.6;">
+                    <h3 style="color: #ff6b35; margin: 1.5rem 0 1rem 0;">Method 1: Steam Server Browser</h3>
+                    <ol style="margin-left: 1.5rem;">
+                        <li>Open Steam and go to View → Servers</li>
+                        <li>Click on "Favorites" tab</li>
+                        <li>Click "Add a Server"</li>
+                        <li>Enter: <strong style="color: #ff6b35;">${ip}:${port}</strong></li>
+                        <li>Click "Add this address to favorites"</li>
+                        <li>Double-click the server to join</li>
+                    </ol>
+                    
+                    <h3 style="color: #ff6b35; margin: 1.5rem 0 1rem 0;">Method 2: DayZ In-Game Browser</h3>
+                    <ol style="margin-left: 1.5rem;">
+                        <li>Launch DayZ</li>
+                        <li>Click "Play" → "Server Browser"</li>
+                        <li>Click "Remote" tab</li>
+                        <li>Enter IP: <strong style="color: #ff6b35;">${ip}</strong></li>
+                        <li>Enter Port: <strong style="color: #ff6b35;">${port}</strong></li>
+                        <li>Click "OK" to connect</li>
+                    </ol>
+                    
+                    <h3 style="color: #ff6b35; margin: 1.5rem 0 1rem 0;">Method 3: Steam Console</h3>
+                    <ol style="margin-left: 1.5rem;">
+                        <li>Press Windows + R</li>
+                        <li>Type: <code style="background: #1a1a1a; padding: 2px 6px; border-radius: 4px;">steam://connect/${ip}:${port}</code></li>
+                        <li>Press Enter</li>
+                    </ol>
+                    
+                    <div style="
+                        background: rgba(255, 107, 53, 0.1);
+                        border: 1px solid rgba(255, 107, 53, 0.3);
+                        border-radius: 10px;
+                        padding: 1rem;
+                        margin-top: 1.5rem;
+                    ">
+                        <strong style="color: #ff6b35;">💡 Pro Tip:</strong> Add the server to your favorites for quick access in the future!
+                    </div>
+                </div>
+            `;
+
+            instructionsModal.appendChild(content);
+            document.body.appendChild(instructionsModal);
         }
 
         // Admin panel functions
@@ -950,5 +1237,5 @@
             cursorElement.style.top = e.clientY - 10 + 'px';
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'967d615613bef8bb',t:'MTc1Mzk2Nzg5MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'967d6b83378464c2',t:'MTc1Mzk2ODMwNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
