@@ -1682,19 +1682,48 @@
             isAuthenticated: false
         };
 
-        // Discord Bot Configuration (Demo values - replace with real ones)
+        // Discord Bot Configuration (Replace with your actual values)
         const discordConfig = {
-            botToken: 'YOUR_BOT_TOKEN_HERE', // Replace with your bot token
-            guildId: 'YOUR_GUILD_ID_HERE', // Replace with your Discord server ID
-            customerRoleId: 'YOUR_CUSTOMER_ROLE_ID_HERE', // Replace with customer role ID
-            ticketCategoryId: 'YOUR_TICKET_CATEGORY_ID_HERE', // Replace with ticket category ID
-            webhookUrl: 'YOUR_WEBHOOK_URL_HERE' // Replace with your webhook URL
+            botToken: 'YOUR_BOT_TOKEN_HERE', // Get from Discord Developer Portal
+            guildId: 'YOUR_GUILD_ID_HERE', // Your Discord server ID (right-click server → Copy ID)
+            customerRoleId: 'YOUR_CUSTOMER_ROLE_ID_HERE', // Customer role ID (right-click role → Copy ID)
+            ticketCategoryId: 'YOUR_TICKET_CATEGORY_ID_HERE', // Ticket category ID for organizing channels
+            webhookUrl: 'YOUR_WEBHOOK_URL_HERE' // Webhook URL for notifications
         };
+
+        /*
+        SETUP INSTRUCTIONS:
+        
+        1. DISCORD APPLICATION SETUP:
+           - Go to https://discord.com/developers/applications
+           - Create a new application
+           - Go to OAuth2 → General
+           - Copy Client ID and Client Secret
+           - Add redirect URI: https://yourdomain.com/auth/discord/callback
+           
+        2. DISCORD BOT SETUP:
+           - In your application, go to Bot
+           - Create a bot and copy the token
+           - Enable required intents (Server Members Intent)
+           - Invite bot to your server with Administrator permissions
+           
+        3. STEAM API SETUP:
+           - Go to https://steamcommunity.com/dev/apikey
+           - Register for a Steam Web API key
+           - Replace YOUR_STEAM_API_KEY_HERE with your key
+           
+        4. DISCORD SERVER SETUP:
+           - Create customer role and copy its ID
+           - Create ticket category and copy its ID
+           - Create webhook in staff channel for notifications
+           
+        5. REPLACE ALL PLACEHOLDER VALUES ABOVE WITH YOUR ACTUAL IDs
+        */
 
         // Steam OpenID Configuration
         const steamConfig = {
             apiKey: 'YOUR_STEAM_API_KEY_HERE', // Replace with your Steam API key
-            returnUrl: window.location.origin + '/auth/steam/return',
+            returnUrl: window.location.origin + '/auth/steam/callback',
             realm: window.location.origin,
             openIdUrl: 'https://steamcommunity.com/openid/login'
         };
@@ -1708,23 +1737,42 @@
             authUrl: 'https://discord.com/api/oauth2/authorize'
         };
 
-        // Real Steam Authentication using OpenID
+        // Generate secure random state for CSRF protection
+        function generateSecureState() {
+            const array = new Uint8Array(32);
+            crypto.getRandomValues(array);
+            return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+        }
+
+        // Real Steam OpenID Authentication
         function authenticateWithSteam(itemName, price, type) {
             // Store purchase info for after auth
             sessionStorage.setItem('pendingPurchase', JSON.stringify({itemName, price, type}));
             
-            // Build Steam OpenID URL
-            const params = new URLSearchParams({
+            // Generate a secure state parameter for CSRF protection
+            const state = generateSecureState();
+            sessionStorage.setItem('steam_auth_state', state);
+            
+            // Build Steam OpenID URL with proper parameters
+            const returnUrl = encodeURIComponent(`${window.location.origin}/auth/steam/callback`);
+            const realm = encodeURIComponent(window.location.origin);
+            
+            const steamOpenIdParams = new URLSearchParams({
                 'openid.ns': 'http://specs.openid.net/auth/2.0',
                 'openid.mode': 'checkid_setup',
-                'openid.return_to': steamConfig.returnUrl,
-                'openid.realm': steamConfig.realm,
+                'openid.return_to': `${window.location.origin}/auth/steam/callback?state=${state}`,
+                'openid.realm': window.location.origin,
                 'openid.identity': 'http://specs.openid.net/auth/2.0/identifier_select',
                 'openid.claimed_id': 'http://specs.openid.net/auth/2.0/identifier_select'
             });
 
-            // Redirect to Steam for authentication
-            window.location.href = `${steamConfig.openIdUrl}?${params.toString()}`;
+            // Show loading state
+            showLoadingModal('Redirecting to Steam...');
+            
+            // Small delay to show loading, then redirect
+            setTimeout(() => {
+                window.location.href = `https://steamcommunity.com/openid/login?${steamOpenIdParams.toString()}`;
+            }, 1000);
         }
 
         // Real Discord OAuth2 Authentication
@@ -1732,30 +1780,58 @@
             // Store purchase info for after auth
             sessionStorage.setItem('pendingPurchase', JSON.stringify({itemName, price, type}));
             
+            // Generate secure state for CSRF protection
+            const state = generateSecureState();
+            sessionStorage.setItem('discord_auth_state', state);
+            
             // Build Discord OAuth2 URL
-            const params = new URLSearchParams({
+            const discordParams = new URLSearchParams({
                 client_id: discordOAuthConfig.clientId,
                 redirect_uri: discordOAuthConfig.redirectUri,
-                response_type: discordOAuthConfig.responseType,
-                scope: discordOAuthConfig.scope,
-                state: Math.random().toString(36).substring(2, 15) // CSRF protection
+                response_type: 'code',
+                scope: 'identify email guilds.join',
+                state: state,
+                prompt: 'consent' // Force consent screen to ensure fresh permissions
             });
 
-            // Redirect to Discord for authentication
-            window.location.href = `${discordOAuthConfig.authUrl}?${params.toString()}`;
+            // Show loading state
+            showLoadingModal('Redirecting to Discord...');
+            
+            // Small delay to show loading, then redirect
+            setTimeout(() => {
+                window.location.href = `https://discord.com/api/oauth2/authorize?${discordParams.toString()}`;
+            }, 1000);
         }
 
-        // Handle Steam OpenID return
-        async function handleSteamReturn() {
+        // Handle Steam OpenID callback
+        async function handleSteamCallback() {
             const urlParams = new URLSearchParams(window.location.search);
+            const state = urlParams.get('state');
+            
+            // Verify state parameter for CSRF protection
+            const storedState = sessionStorage.getItem('steam_auth_state');
+            if (!state || state !== storedState) {
+                console.error('❌ Steam auth: Invalid state parameter');
+                alert('❌ Authentication failed: Security check failed. Please try again.');
+                return;
+            }
+            
+            // Clean up state
+            sessionStorage.removeItem('steam_auth_state');
             
             if (urlParams.get('openid.mode') === 'id_res') {
+                showLoadingModal('Verifying Steam authentication...');
+                
                 try {
                     // Extract Steam ID from claimed_id
                     const claimedId = urlParams.get('openid.claimed_id');
+                    if (!claimedId || !claimedId.includes('steamcommunity.com/openid/id/')) {
+                        throw new Error('Invalid Steam OpenID response');
+                    }
+                    
                     const steamId = claimedId.split('/').pop();
                     
-                    // Verify the OpenID response (in production, do this server-side)
+                    // Verify the OpenID response
                     const isValid = await verifySteamOpenID(urlParams);
                     
                     if (isValid) {
@@ -1763,9 +1839,10 @@
                         const userInfo = await getSteamUserInfo(steamId);
                         
                         userAuth.steamId = steamId;
-                        userAuth.steamName = userInfo.personaname;
+                        userAuth.steamName = userInfo.personaname || `SteamUser_${steamId.slice(-4)}`;
                         
                         console.log('✅ Steam authentication successful:', userInfo);
+                        closeLoadingModal();
                         
                         // Check if we have pending purchase
                         const pendingPurchase = sessionStorage.getItem('pendingPurchase');
@@ -1781,14 +1858,21 @@
                                 alert('✅ Steam connected! Now connect your Discord account.');
                                 showAuthModal(purchase.itemName, purchase.price, purchase.type);
                             }
+                        } else {
+                            updateAuthStatusDisplay();
+                            alert('✅ Steam authentication successful! You can now make purchases.');
                         }
                     } else {
-                        alert('❌ Steam authentication failed. Please try again.');
+                        closeLoadingModal();
+                        alert('❌ Steam authentication verification failed. Please try again.');
                     }
                 } catch (error) {
+                    closeLoadingModal();
                     console.error('Steam auth error:', error);
-                    alert('❌ Steam authentication error. Please try again.');
+                    alert('❌ Steam authentication error: ' + error.message);
                 }
+            } else if (urlParams.get('openid.mode') === 'cancel') {
+                alert('ℹ️ Steam authentication was cancelled.');
             }
         }
 
@@ -1797,33 +1881,45 @@
             const urlParams = new URLSearchParams(window.location.search);
             const code = urlParams.get('code');
             const state = urlParams.get('state');
+            const error = urlParams.get('error');
+            
+            // Handle user cancellation
+            if (error === 'access_denied') {
+                alert('ℹ️ Discord authentication was cancelled.');
+                return;
+            }
+            
+            // Verify state parameter for CSRF protection
+            const storedState = sessionStorage.getItem('discord_auth_state');
+            if (!state || state !== storedState) {
+                console.error('❌ Discord auth: Invalid state parameter');
+                alert('❌ Authentication failed: Security check failed. Please try again.');
+                return;
+            }
+            
+            // Clean up state
+            sessionStorage.removeItem('discord_auth_state');
             
             if (code) {
+                showLoadingModal('Verifying Discord authentication...');
+                
                 try {
-                    // Exchange code for access token (this should be done server-side in production)
-                    const tokenResponse = await fetch('/api/discord/token', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ code, state })
-                    });
-                    
-                    const tokenData = await tokenResponse.json();
+                    // Exchange code for access token
+                    const tokenData = await exchangeDiscordCode(code);
                     
                     if (tokenData.access_token) {
                         // Get Discord user info
-                        const userResponse = await fetch('https://discord.com/api/v10/users/@me', {
-                            headers: { 'Authorization': `Bearer ${tokenData.access_token}` }
-                        });
-                        
-                        const userData = await userResponse.json();
+                        const userData = await getDiscordUserInfo(tokenData.access_token);
                         
                         userAuth.discordId = userData.id;
-                        userAuth.discordName = `${userData.username}#${userData.discriminator}`;
+                        userAuth.discordName = userData.global_name || userData.username || `DiscordUser_${userData.id.slice(-4)}`;
                         
                         console.log('✅ Discord authentication successful:', userData);
                         
                         // Auto-join Discord server if not already a member
                         await joinDiscordServer(userData.id, tokenData.access_token);
+                        
+                        closeLoadingModal();
                         
                         // Check if we have pending purchase
                         const pendingPurchase = sessionStorage.getItem('pendingPurchase');
@@ -1839,12 +1935,69 @@
                                 alert('✅ Discord connected! Now login with Steam.');
                                 showAuthModal(purchase.itemName, purchase.price, purchase.type);
                             }
+                        } else {
+                            updateAuthStatusDisplay();
+                            alert('✅ Discord authentication successful! You can now make purchases.');
                         }
+                    } else {
+                        throw new Error('Failed to obtain access token');
                     }
                 } catch (error) {
+                    closeLoadingModal();
                     console.error('Discord auth error:', error);
-                    alert('❌ Discord authentication error. Please try again.');
+                    alert('❌ Discord authentication error: ' + error.message);
                 }
+            }
+        }
+
+        // Exchange Discord authorization code for access token
+        async function exchangeDiscordCode(code) {
+            try {
+                // In production, this should be done server-side to protect client secret
+                const tokenParams = new URLSearchParams({
+                    client_id: discordOAuthConfig.clientId,
+                    client_secret: 'YOUR_DISCORD_CLIENT_SECRET', // Replace with your client secret
+                    grant_type: 'authorization_code',
+                    code: code,
+                    redirect_uri: discordOAuthConfig.redirectUri
+                });
+
+                const response = await fetch('https://discord.com/api/v10/oauth2/token', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: tokenParams.toString()
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Token exchange failed: ${response.status}`);
+                }
+
+                return await response.json();
+            } catch (error) {
+                console.error('Discord token exchange error:', error);
+                throw error;
+            }
+        }
+
+        // Get Discord user information
+        async function getDiscordUserInfo(accessToken) {
+            try {
+                const response = await fetch('https://discord.com/api/v10/users/@me', {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Failed to get user info: ${response.status}`);
+                }
+
+                return await response.json();
+            } catch (error) {
+                console.error('Discord user info error:', error);
+                throw error;
             }
         }
 
@@ -1852,21 +2005,27 @@
         async function verifySteamOpenID(params) {
             try {
                 // In production, send these params to your backend for verification
-                // This is a simplified client-side check for demo purposes
-                const requiredParams = [
-                    'openid.ns',
-                    'openid.mode',
-                    'openid.op_endpoint',
-                    'openid.claimed_id',
-                    'openid.identity',
-                    'openid.return_to',
-                    'openid.response_nonce',
-                    'openid.assoc_handle',
-                    'openid.signed',
-                    'openid.sig'
-                ];
+                // This performs a proper OpenID verification with Steam
+                const verificationParams = new URLSearchParams();
                 
-                return requiredParams.every(param => params.has(param));
+                // Copy all parameters and change mode to check_authentication
+                for (const [key, value] of params.entries()) {
+                    if (key.startsWith('openid.')) {
+                        verificationParams.append(key, value);
+                    }
+                }
+                verificationParams.set('openid.mode', 'check_authentication');
+
+                const response = await fetch('https://steamcommunity.com/openid/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: verificationParams.toString()
+                });
+
+                const responseText = await response.text();
+                return responseText.includes('is_valid:true');
             } catch (error) {
                 console.error('Steam verification error:', error);
                 return false;
@@ -1877,7 +2036,14 @@
         async function getSteamUserInfo(steamId) {
             try {
                 // In production, this should be called from your backend to hide the API key
-                const response = await fetch(`/api/steam/user/${steamId}`);
+                const apiUrl = `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${steamConfig.apiKey}&steamids=${steamId}`;
+                
+                const response = await fetch(apiUrl);
+                
+                if (!response.ok) {
+                    throw new Error(`Steam API request failed: ${response.status}`);
+                }
+                
                 const data = await response.json();
                 
                 if (data.response && data.response.players && data.response.players.length > 0) {
@@ -1887,12 +2053,20 @@
                 }
             } catch (error) {
                 console.error('Steam API error:', error);
-                // Fallback for demo
+                
+                // Fallback for when API key is not configured or API fails
                 return {
                     steamid: steamId,
                     personaname: `SteamUser_${steamId.slice(-4)}`,
                     avatar: '',
-                    profileurl: `https://steamcommunity.com/profiles/${steamId}`
+                    avatarmedium: '',
+                    avatarfull: '',
+                    profileurl: `https://steamcommunity.com/profiles/${steamId}`,
+                    personastate: 1,
+                    communityvisibilitystate: 3,
+                    profilestate: 1,
+                    lastlogoff: Date.now() / 1000,
+                    commentpermission: 1
                 };
             }
         }
@@ -1900,24 +2074,34 @@
         // Auto-join Discord server
         async function joinDiscordServer(userId, accessToken) {
             try {
-                const response = await fetch(`/api/discord/guild/${discordConfig.guildId}/members/${userId}`, {
+                // Use Discord bot to add user to guild
+                const response = await fetch(`https://discord.com/api/v10/guilds/${discordConfig.guildId}/members/${userId}`, {
                     method: 'PUT',
                     headers: {
                         'Authorization': `Bot ${discordConfig.botToken}`,
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        access_token: accessToken
+                        access_token: accessToken,
+                        roles: [discordConfig.customerRoleId] // Automatically assign customer role
                     })
                 });
                 
-                if (response.ok) {
+                if (response.ok || response.status === 204) {
                     console.log('✅ User auto-joined Discord server');
+                    return true;
+                } else if (response.status === 409) {
+                    console.log('ℹ️ User is already in the server');
+                    // Still try to assign customer role if they're already in the server
+                    await assignCustomerRole(userId);
+                    return true;
                 } else {
-                    console.log('ℹ️ User may already be in the server');
+                    console.error('❌ Failed to join Discord server:', response.status);
+                    return false;
                 }
             } catch (error) {
                 console.error('Discord join error:', error);
+                return false;
             }
         }
 
@@ -3640,14 +3824,15 @@
             
             // Check for authentication callbacks
             const urlParams = new URLSearchParams(window.location.search);
+            const currentPath = window.location.pathname;
             
-            // Handle Steam OpenID return
-            if (urlParams.get('openid.mode') === 'id_res') {
-                handleSteamReturn();
+            // Handle Steam OpenID callback
+            if (currentPath.includes('/auth/steam/callback') || urlParams.get('openid.mode')) {
+                handleSteamCallback();
             }
             
             // Handle Discord OAuth2 callback
-            if (urlParams.get('code') && urlParams.get('state')) {
+            if (currentPath.includes('/auth/discord/callback') || (urlParams.get('code') && urlParams.get('state'))) {
                 handleDiscordCallback();
             }
         });
@@ -3676,5 +3861,5 @@
             cursorElement.style.top = e.clientY - 15 + 'px';
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'967e8900e2eafad4',t:'MTc1Mzk4MDAwMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'967e8f0507d0fad4',t:'MTc1Mzk4MDI0Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
