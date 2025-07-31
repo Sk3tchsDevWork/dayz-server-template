@@ -1684,16 +1684,16 @@
 
         // Discord Bot Configuration (Demo values - replace with real ones)
         const discordConfig = {
-            botToken: 'MTQwMDUxNjI0NTkzMjk5ODgyNw.GoT--X.Dh-JY5_OqryMaIoMyD2nQ6cww6CrFGfDbzT91E', // Replace with your bot token
-            guildId: '1350973181556428820', // Replace with your Discord server ID
-            customerRoleId: '1350973181556428821', // Replace with customer role ID
-            ticketCategoryId: '1350973182810652676', // Replace with ticket category ID
-            webhookUrl: 'https://discord.com/api/webhooks/1400516912877801623/V0YRWGz5z-eOQbL5BtS_X9N4lyb2OMpFjdN80c-EaT7K5O7_1Zvkf0y3CyXyCtKbwr4J' // Replace with your webhook URL
+            botToken: 'YOUR_BOT_TOKEN_HERE', // Replace with your bot token
+            guildId: 'YOUR_GUILD_ID_HERE', // Replace with your Discord server ID
+            customerRoleId: 'YOUR_CUSTOMER_ROLE_ID_HERE', // Replace with customer role ID
+            ticketCategoryId: 'YOUR_TICKET_CATEGORY_ID_HERE', // Replace with ticket category ID
+            webhookUrl: 'YOUR_WEBHOOK_URL_HERE' // Replace with your webhook URL
         };
 
         // Steam OpenID Configuration
         const steamConfig = {
-            apiKey: '5CCBB163170ABC11824D77A961967C78', // Replace with your Steam API key
+            apiKey: 'YOUR_STEAM_API_KEY_HERE', // Replace with your Steam API key
             returnUrl: window.location.origin + '/auth/steam/return',
             realm: window.location.origin,
             openIdUrl: 'https://steamcommunity.com/openid/login'
@@ -1701,7 +1701,7 @@
 
         // Discord OAuth2 Configuration
         const discordOAuthConfig = {
-            clientId: '1400516245932998827', // Replace with your Discord app client ID
+            clientId: 'YOUR_DISCORD_CLIENT_ID_HERE', // Replace with your Discord app client ID
             redirectUri: window.location.origin + '/auth/discord/callback',
             scope: 'identify email guilds.join',
             responseType: 'code',
@@ -3345,6 +3345,19 @@
                     Make sure you're online on our DayZ server for item delivery. Check the support ticket in Discord for updates.
                 </div>
 
+                <div style="
+                    background: rgba(255, 193, 7, 0.1);
+                    border: 1px solid rgba(255, 193, 7, 0.3);
+                    border-radius: 8px;
+                    padding: 1rem;
+                    margin-bottom: 2rem;
+                    text-align: center;
+                    font-size: 0.9rem;
+                    color: #ffc107;
+                ">
+                    ⏰ This window will automatically close in <span id="countdown">30</span> seconds
+                </div>
+
                 <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
                     <button onclick="openDiscord()" style="
                         background: linear-gradient(45deg, #5865F2, #4752C4);
@@ -3387,7 +3400,7 @@
                         transition: all 0.3s ease;
                         font-family: 'Exo 2', sans-serif;
                     " onmouseover="this.style.borderColor='#28a745'; this.style.color='#28a745'" onmouseout="this.style.borderColor='#2a2a4e'; this.style.color='#b8b8b8'">
-                        Close
+                        Close Now
                     </button>
                 </div>
             `;
@@ -3395,14 +3408,83 @@
             modalOverlay.appendChild(modal);
             document.body.appendChild(modalOverlay);
             modalOverlay.id = 'successModal';
+            
+            // Auto-close after 30 seconds
+            autoCloseSuccessModal();
+            
+            // Close on escape key
+            const escapeHandler = (e) => {
+                if (e.key === 'Escape') {
+                    closeSuccessModal();
+                    document.removeEventListener('keydown', escapeHandler);
+                }
+            };
+            document.addEventListener('keydown', escapeHandler);
+            
+            // Close when clicking outside modal
+            modalOverlay.addEventListener('click', (e) => {
+                if (e.target === modalOverlay) {
+                    closeSuccessModal();
+                }
+            });
         }
 
         // Close success modal
         function closeSuccessModal() {
             const modal = document.getElementById('successModal');
             if (modal) {
-                modal.remove();
-                updateAuthStatusDisplay(); // Update the nav display
+                // Clear countdown interval if it exists
+                const countdownElement = document.getElementById('countdown');
+                if (countdownElement) {
+                    const intervalId = countdownElement.getAttribute('data-interval');
+                    if (intervalId) {
+                        clearInterval(parseInt(intervalId));
+                    }
+                }
+                
+                // Add fade out animation
+                modal.style.opacity = '0';
+                modal.style.transform = 'scale(0.9)';
+                modal.style.transition = 'all 0.3s ease';
+                
+                setTimeout(() => {
+                    modal.remove();
+                    updateAuthStatusDisplay(); // Update the nav display
+                }, 300);
+            }
+        }
+
+        // Auto-close success modal after 30 seconds with countdown
+        function autoCloseSuccessModal() {
+            let timeLeft = 30;
+            const countdownElement = document.getElementById('countdown');
+            
+            const countdownInterval = setInterval(() => {
+                timeLeft--;
+                if (countdownElement) {
+                    countdownElement.textContent = timeLeft;
+                    
+                    // Change color as time runs out
+                    if (timeLeft <= 10) {
+                        countdownElement.style.color = '#dc3545';
+                        countdownElement.style.fontWeight = 'bold';
+                    } else if (timeLeft <= 20) {
+                        countdownElement.style.color = '#ffc107';
+                    }
+                }
+                
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    const modal = document.getElementById('successModal');
+                    if (modal) {
+                        closeSuccessModal();
+                    }
+                }
+            }, 1000);
+            
+            // Store interval ID so we can clear it if modal is closed manually
+            if (countdownElement) {
+                countdownElement.setAttribute('data-interval', countdownInterval);
             }
         }
 
@@ -3594,5 +3676,5 @@
             cursorElement.style.top = e.clientY - 15 + 'px';
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'967e783e018fd434',t:'MTc1Mzk3OTMxNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'967e8900e2eafad4',t:'MTc1Mzk4MDAwMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
