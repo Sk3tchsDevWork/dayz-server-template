@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DayZ Server - Survive the Apocalypse</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;500&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: #e0e0e0;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid #ff6b35;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: #ff6b35;
+            text-shadow: 0 0 10px rgba(255, 107, 53, 0.5);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: #e0e0e0;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #ff6b35;
+            text-shadow: 0 0 5px rgba(255, 107, 53, 0.5);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #ff6b35;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%23333" width="1200" height="800"/><g fill="%23444"><circle cx="200" cy="150" r="3"/><circle cx="800" cy="300" r="2"/><circle cx="1000" cy="100" r="4"/><circle cx="400" cy="500" r="2"/><circle cx="600" cy="200" r="3"/></g></svg>');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-content h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 107, 53, 0.3); }
+            to { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 30px rgba(255, 107, 53, 0.6); }
+        }
+
+        .hero-content p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, #ff6b35, #ff8c42);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.5);
+        }
+
+        /* Server Status */
+        .server-status {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 4rem 0;
+            margin-top: -100px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .status-card {
+            background: linear-gradient(135deg, #2a2a2a, #1f1f1f);
+            border: 1px solid #444;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .status-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 107, 53, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .status-card:hover::before {
+            left: 100%;
+        }
+
+        .status-card:hover {
+            transform: translateY(-5px);
+            border-color: #ff6b35;
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.2);
+        }
+
+        .server-name {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.5rem;
+            color: #ff6b35;
+            margin-bottom: 1rem;
+        }
+
+        .server-info {
+            display: flex;
+            justify-content: space-between;
+            margin: 1rem 0;
+        }
+
+        .status-online {
+            color: #4ade80;
+            font-weight: 700;
+        }
+
+        .status-offline {
+            color: #ef4444;
+            font-weight: 700;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 6rem 0;
+            background: linear-gradient(135deg, #1f1f1f, #2a2a2a);
+        }
+
+        .section-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: #ff6b35;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 3rem;
+        }
+
+        .feature-card {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid #444;
+            border-radius: 15px;
+            padding: 2.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: #ff6b35;
+            box-shadow: 0 15px 40px rgba(255, 107, 53, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .feature-card h3 {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #ff6b35;
+        }
+
+        /* Rules Section */
+        .rules {
+            padding: 6rem 0;
+            background: linear-gradient(135deg, #2a2a2a, #1f1f1f);
+        }
+
+        .rules-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .rules-category {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #444;
+            border-radius: 15px;
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .rules-category::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 107, 53, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .rules-category:hover::before {
+            left: 100%;
+        }
+
+        .rules-category:hover {
+            transform: translateY(-5px);
+            border-color: #ff6b35;
+            box-shadow: 0 15px 40px rgba(255, 107, 53, 0.2);
+        }
+
+        .rules-category h3 {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.8rem;
+            color: #ff6b35;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .rules-category .rule-icon {
+            font-size: 2rem;
+        }
+
+        .rules-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .rules-list li {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(255, 107, 53, 0.2);
+            color: #e0e0e0;
+            line-height: 1.6;
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .rules-list li:last-child {
+            border-bottom: none;
+        }
+
+        .rules-list li::before {
+            content: '⚠️';
+            position: absolute;
+            left: 0;
+            top: 0.8rem;
+            font-size: 1rem;
+        }
+
+        .rules-list li.positive::before {
+            content: '✅';
+        }
+
+        .rules-list li.negative::before {
+            content: '❌';
+        }
+
+        .punishment-info {
+            background: rgba(255, 107, 53, 0.1);
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1.5rem;
+            color: #ff6b35;
+            font-weight: 500;
+        }
+
+        .punishment-info strong {
+            color: #ff8c42;
+        }
+
+        /* Admin Panel */
+        .admin-panel {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 4rem 0;
+            display: none;
+        }
+
+        .admin-panel.active {
+            display: block;
+        }
+
+        .admin-form {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #2a2a2a;
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid #444;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #ff6b35;
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 12px;
+            background: #1a1a1a;
+            border: 1px solid #444;
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            outline: none;
+            border-color: #ff6b35;
+            box-shadow: 0 0 10px rgba(255, 107, 53, 0.3);
+        }
+
+        /* Footer */
+        footer {
+            background: #000;
+            padding: 3rem 0;
+            text-align: center;
+            border-top: 2px solid #ff6b35;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            color: #ff6b35;
+            margin-bottom: 1rem;
+            font-family: 'Orbitron', monospace;
+        }
+
+        .footer-section a {
+            color: #e0e0e0;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: #ff6b35;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .rules-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #444;
+            border-radius: 50%;
+            border-top-color: #ff6b35;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo" id="serverLogo">DAYZ SERVER</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#servers">Servers</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#rules">Rules</a></li>
+                <li><a href="#admin" onclick="toggleAdmin()">Admin</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero" id="home">
+            <div class="hero-content">
+                <h1 id="heroTitle">SURVIVE THE APOCALYPSE</h1>
+                <p id="heroDescription">Join our hardcore DayZ servers for the ultimate survival experience. Loot, craft, and fight to stay alive in a world gone mad.</p>
+                <a href="#servers" class="cta-button">JOIN NOW</a>
+            </div>
+        </section>
+
+        <section class="server-status" id="servers">
+            <div class="container">
+                <h2 class="section-title">Server Status</h2>
+                <div class="status-grid" id="serverGrid">
+                    <!-- Servers will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <section class="features" id="features">
+            <div class="container">
+                <h2 class="section-title">Server Features</h2>
+                <div class="features-grid" id="featuresGrid">
+                    <!-- Features will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <section class="rules" id="rules">
+            <div class="container">
+                <h2 class="section-title">Server Rules</h2>
+                <p style="text-align: center; font-size: 1.2rem; color: #ccc; margin-bottom: 2rem;">
+                    Follow these rules to ensure a fair and enjoyable experience for all players
+                </p>
+                <div class="rules-container" id="rulesContainer">
+                    <!-- Rules will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <section class="admin-panel" id="adminPanel">
+            <div class="container">
+                <h2 class="section-title">Admin Panel</h2>
+                <div class="admin-form">
+                    <div class="form-group">
+                        <label for="adminPassword">Admin Password:</label>
+                        <input type="password" id="adminPassword" placeholder="Enter admin password">
+                    </div>
+                    <button class="cta-button" onclick="authenticateAdmin()">Login</button>
+                    
+                    <div id="adminControls" style="display: none; margin-top: 2rem;">
+                        <div class="form-group">
+                            <label for="serverNameInput">Server Name:</label>
+                            <input type="text" id="serverNameInput" placeholder="Enter server name">
+                        </div>
+                        <div class="form-group">
+                            <label for="serverIPInput">Server IP:</label>
+                            <input type="text" id="serverIPInput" placeholder="Enter server IP">
+                        </div>
+                        <div class="form-group">
+                            <label for="serverPortInput">Server Port:</label>
+                            <input type="text" id="serverPortInput" placeholder="Enter server port">
+                        </div>
+                        <div class="form-group">
+                            <label for="maxPlayersInput">Max Players:</label>
+                            <input type="number" id="maxPlayersInput" placeholder="Enter max players">
+                        </div>
+                        <div class="form-group">
+                            <label for="serverStatusInput">Status:</label>
+                            <select id="serverStatusInput">
+                                <option value="online">Online</option>
+                                <option value="offline">Offline</option>
+                            </select>
+                        </div>
+                        <button class="cta-button" onclick="addServer()">Add Server</button>
+                        <button class="cta-button" onclick="updateTheme()" style="margin-left: 1rem;">Update Theme</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <a href="#home">Home</a>
+                    <a href="#servers">Servers</a>
+                    <a href="#features">Features</a>
+                    <a href="#rules">Rules</a>
+                </div>
+                <div class="footer-section">
+                    <h3>Community</h3>
+                    <a href="#" onclick="showDemo('Discord')">Discord</a>
+                    <a href="#" onclick="showDemo('Steam Group')">Steam Group</a>
+                    <a href="#" onclick="showDemo('Forums')">Forums</a>
+                </div>
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <a href="#" onclick="showDemo('Contact')">Contact</a>
+                    <a href="#rules">Rules</a>
+                    <a href="#" onclick="showDemo('Donations')">Donations</a>
+                </div>
+            </div>
+            <p>&copy; 2024 DayZ Server Template. Built for survival.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Configuration object for easy customization
+        const config = {
+            serverName: "DAYZ SERVER",
+            heroTitle: "SURVIVE THE APOCALYPSE",
+            heroDescription: "Join our hardcore DayZ servers for the ultimate survival experience. Loot, craft, and fight to stay alive in a world gone mad.",
+            adminPassword: "admin123",
+            servers: [
+                {
+                    name: "Hardcore Survival",
+                    ip: "192.168.1.100",
+                    port: "2302",
+                    players: 45,
+                    maxPlayers: 60,
+                    status: "online"
+                },
+                {
+                    name: "PvP Arena",
+                    ip: "192.168.1.101", 
+                    port: "2303",
+                    players: 32,
+                    maxPlayers: 40,
+                    status: "online"
+                },
+                {
+                    name: "Roleplay Server",
+                    ip: "192.168.1.102",
+                    port: "2304", 
+                    players: 0,
+                    maxPlayers: 80,
+                    status: "offline"
+                }
+            ],
+            rules: [
+                {
+                    category: "General Conduct",
+                    icon: "👥",
+                    rules: [
+                        { text: "Respect all players and staff members at all times", type: "positive" },
+                        { text: "No harassment, discrimination, or toxic behavior", type: "negative" },
+                        { text: "English only in global chat", type: "general" },
+                        { text: "No spamming or excessive use of caps", type: "negative" },
+                        { text: "Use appropriate usernames and character names", type: "general" }
+                    ],
+                    punishment: "Violations result in warnings, temporary mutes, or permanent bans depending on severity"
+                },
+                {
+                    category: "Gameplay Rules",
+                    icon: "🎮",
+                    rules: [
+                        { text: "No cheating, hacking, or exploiting game bugs", type: "negative" },
+                        { text: "Combat logging is strictly prohibited", type: "negative" },
+                        { text: "No ghosting or server hopping for tactical advantage", type: "negative" },
+                        { text: "Roleplay scenarios are encouraged", type: "positive" },
+                        { text: "Base building is allowed in designated areas only", type: "general" }
+                    ],
+                    punishment: "Cheating results in immediate permanent ban. Other violations may result in temporary bans"
+                },
+                {
+                    category: "PvP Guidelines",
+                    icon: "⚔️",
+                    rules: [
+                        { text: "KOS (Kill on Sight) is allowed in military zones", type: "positive" },
+                        { text: "No camping fresh spawn areas", type: "negative" },
+                        { text: "Initiate contact before engaging in civilian areas", type: "general" },
+                        { text: "No revenge killing after respawn", type: "negative" },
+                        { text: "Group limit of 6 players maximum", type: "general" }
+                    ],
+                    punishment: "PvP rule violations result in temporary bans ranging from 24 hours to 7 days"
+                },
+                {
+                    category: "Base Building",
+                    icon: "🏗️",
+                    rules: [
+                        { text: "Maximum of 2 bases per player/group", type: "general" },
+                        { text: "No building in military loot spawns", type: "negative" },
+                        { text: "Bases must have at least one raidable entrance", type: "general" },
+                        { text: "No floating or unrealistic structures", type: "negative" },
+                        { text: "Inactive bases (30+ days) will be removed", type: "general" }
+                    ],
+                    punishment: "Illegal bases will be removed without warning. Repeated violations may result in building restrictions"
+                }
+            ],
+            features: [
+                {
+                    icon: "🎯",
+                    title: "High Performance",
+                    description: "Optimized servers with 99.9% uptime and low latency for the best gaming experience."
+                },
+                {
+                    icon: "🛡️",
+                    title: "Anti-Cheat Protection",
+                    description: "Advanced anti-cheat systems to ensure fair play and maintain server integrity."
+                },
+                {
+                    icon: "🔧",
+                    title: "Custom Modifications",
+                    description: "Carefully selected mods to enhance gameplay while maintaining the DayZ experience."
+                },
+                {
+                    icon: "👥",
+                    title: "Active Community",
+                    description: "Join thousands of players in our Discord community with regular events and competitions."
+                },
+                {
+                    icon: "⚡",
+                    title: "Regular Updates",
+                    description: "Servers are updated regularly with the latest DayZ patches and security fixes."
+                },
+                {
+                    icon: "🎮",
+                    title: "Multiple Game Modes",
+                    description: "Choose from various game modes including hardcore survival, PvP, and roleplay servers."
+                }
+            ]
+        };
+
+        // Initialize the website
+        function initializeWebsite() {
+            updateThemeElements();
+            renderServers();
+            renderFeatures();
+            renderRules();
+            simulatePlayerCounts();
+        }
+
+        // Update theme elements
+        function updateThemeElements() {
+            document.getElementById('serverLogo').textContent = config.serverName;
+            document.getElementById('heroTitle').textContent = config.heroTitle;
+            document.getElementById('heroDescription').textContent = config.heroDescription;
+            document.title = config.serverName + " - Survive the Apocalypse";
+        }
+
+        // Render server status cards
+        function renderServers() {
+            const serverGrid = document.getElementById('serverGrid');
+            serverGrid.innerHTML = '';
+
+            config.servers.forEach((server, index) => {
+                const serverCard = document.createElement('div');
+                serverCard.className = 'status-card';
+                serverCard.innerHTML = `
+                    <div class="server-name">${server.name}</div>
+                    <div class="server-info">
+                        <span>Players:</span>
+                        <span id="players-${index}">${server.players}/${server.maxPlayers}</span>
+                    </div>
+                    <div class="server-info">
+                        <span>Status:</span>
+                        <span class="status-${server.status}" id="status-${index}">${server.status.toUpperCase()}</span>
+                    </div>
+                    <div class="server-info">
+                        <span>IP:</span>
+                        <span>${server.ip}:${server.port}</span>
+                    </div>
+                    <button class="cta-button" onclick="connectToServer('${server.ip}:${server.port}')" 
+                            ${server.status === 'offline' ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
+                        ${server.status === 'online' ? 'CONNECT' : 'OFFLINE'}
+                    </button>
+                `;
+                serverGrid.appendChild(serverCard);
+            });
+        }
+
+        // Render features
+        function renderFeatures() {
+            const featuresGrid = document.getElementById('featuresGrid');
+            featuresGrid.innerHTML = '';
+
+            config.features.forEach(feature => {
+                const featureCard = document.createElement('div');
+                featureCard.className = 'feature-card';
+                featureCard.innerHTML = `
+                    <span class="feature-icon">${feature.icon}</span>
+                    <h3>${feature.title}</h3>
+                    <p>${feature.description}</p>
+                `;
+                featuresGrid.appendChild(featureCard);
+            });
+        }
+
+        // Render rules
+        function renderRules() {
+            const rulesContainer = document.getElementById('rulesContainer');
+            rulesContainer.innerHTML = '';
+
+            config.rules.forEach(category => {
+                const rulesCategory = document.createElement('div');
+                rulesCategory.className = 'rules-category';
+                rulesCategory.innerHTML = `
+                    <h3>
+                        <span class="rule-icon">${category.icon}</span>
+                        ${category.category}
+                    </h3>
+                    <ul class="rules-list">
+                        ${category.rules.map(rule => `
+                            <li class="${rule.type}">${rule.text}</li>
+                        `).join('')}
+                    </ul>
+                    <div class="punishment-info">
+                        <strong>Consequences:</strong> ${category.punishment}
+                    </div>
+                `;
+                rulesContainer.appendChild(rulesCategory);
+            });
+        }
+
+        // Simulate dynamic player counts
+        function simulatePlayerCounts() {
+            setInterval(() => {
+                config.servers.forEach((server, index) => {
+                    if (server.status === 'online') {
+                        // Simulate player count changes
+                        const change = Math.floor(Math.random() * 5) - 2; // -2 to +2
+                        server.players = Math.max(0, Math.min(server.maxPlayers, server.players + change));
+                        
+                        const playerElement = document.getElementById(`players-${index}`);
+                        if (playerElement) {
+                            playerElement.textContent = `${server.players}/${server.maxPlayers}`;
+                        }
+                    }
+                });
+            }, 10000); // Update every 10 seconds
+        }
+
+        // Connect to server function
+        function connectToServer(serverAddress) {
+            // In a real implementation, this would launch DayZ with the server IP
+            alert(`Connecting to server: ${serverAddress}\n\nIn a real implementation, this would launch DayZ with the server connection details.`);
+        }
+
+        // Admin panel functions
+        function toggleAdmin() {
+            const adminPanel = document.getElementById('adminPanel');
+            adminPanel.classList.toggle('active');
+        }
+
+        function authenticateAdmin() {
+            const password = document.getElementById('adminPassword').value;
+            const adminControls = document.getElementById('adminControls');
+            
+            if (password === config.adminPassword) {
+                adminControls.style.display = 'block';
+                alert('Admin access granted!');
+            } else {
+                alert('Invalid password!');
+            }
+        }
+
+        function addServer() {
+            const name = document.getElementById('serverNameInput').value;
+            const ip = document.getElementById('serverIPInput').value;
+            const port = document.getElementById('serverPortInput').value;
+            const maxPlayers = parseInt(document.getElementById('maxPlayersInput').value);
+            const status = document.getElementById('serverStatusInput').value;
+
+            if (name && ip && port && maxPlayers) {
+                config.servers.push({
+                    name: name,
+                    ip: ip,
+                    port: port,
+                    players: status === 'online' ? Math.floor(Math.random() * maxPlayers) : 0,
+                    maxPlayers: maxPlayers,
+                    status: status
+                });
+
+                renderServers();
+                
+                // Clear form
+                document.getElementById('serverNameInput').value = '';
+                document.getElementById('serverIPInput').value = '';
+                document.getElementById('serverPortInput').value = '';
+                document.getElementById('maxPlayersInput').value = '';
+                
+                alert('Server added successfully!');
+            } else {
+                alert('Please fill in all fields!');
+            }
+        }
+
+        function updateTheme() {
+            const newName = prompt('Enter new server name:', config.serverName);
+            const newTitle = prompt('Enter new hero title:', config.heroTitle);
+            const newDescription = prompt('Enter new description:', config.heroDescription);
+
+            if (newName) config.serverName = newName;
+            if (newTitle) config.heroTitle = newTitle;
+            if (newDescription) config.heroDescription = newDescription;
+
+            updateThemeElements();
+            alert('Theme updated successfully!');
+        }
+
+        // Demo function for non-functional links
+        function showDemo(feature) {
+            alert(`${feature} Demo\n\nThis is a template demonstration. In a real implementation, this would link to your ${feature.toLowerCase()}.`);
+        }
+
+
+
+        // Smooth scrolling for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Initialize website when page loads
+        document.addEventListener('DOMContentLoaded', initializeWebsite);
+
+        // Add some interactive effects
+        document.addEventListener('mousemove', (e) => {
+            const cursor = document.querySelector('.cursor');
+            if (!cursor) {
+                const newCursor = document.createElement('div');
+                newCursor.className = 'cursor';
+                newCursor.style.cssText = `
+                    position: fixed;
+                    width: 20px;
+                    height: 20px;
+                    background: radial-gradient(circle, rgba(255,107,53,0.3) 0%, transparent 70%);
+                    border-radius: 50%;
+                    pointer-events: none;
+                    z-index: 9999;
+                    transition: transform 0.1s ease;
+                `;
+                document.body.appendChild(newCursor);
+            }
+            
+            const cursorElement = document.querySelector('.cursor');
+            cursorElement.style.left = e.clientX - 10 + 'px';
+            cursorElement.style.top = e.clientY - 10 + 'px';
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'967d615613bef8bb',t:'MTc1Mzk2Nzg5MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
