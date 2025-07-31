@@ -593,9 +593,9 @@
                 </div>
                 <div class="footer-section">
                     <h3>Community</h3>
-                    <a href="#" onclick="showDemo('Discord')">Discord</a>
-                    <a href="#" onclick="showDemo('Steam Group')">Steam Group</a>
-                    <a href="#" onclick="showDemo('Forums')">Forums</a>
+                    <a href="#" onclick="openDiscord()">Discord</a>
+                    <a href="#" onclick="openSteamGroup()">Steam Group</a>
+                    <a href="#" onclick="openForums()">Forums</a>
                 </div>
                 <div class="footer-section">
                     <h3>Support</h3>
@@ -1189,9 +1189,769 @@
             alert('Theme updated successfully!');
         }
 
-        // Demo function for non-functional links
+        // Community link functions
+        function openDiscord() {
+            // Opens your Discord server
+            window.open('https://discord.gg/qE8qJ87CY6', '_blank');
+        }
+
+        function openSteamGroup() {
+            // Opens DayZ Official Steam Group as placeholder
+            window.open('https://steamcommunity.com/app/221100', '_blank');
+        }
+
+        function openForums() {
+            // Show forums mockup modal
+            showForumsModal();
+        }
+
+        // Forums mockup modal
+        function showForumsModal() {
+            const modalOverlay = document.createElement('div');
+            modalOverlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.9);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10000;
+                backdrop-filter: blur(5px);
+            `;
+
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                background: linear-gradient(135deg, #2a2a2a, #1f1f1f);
+                border: 2px solid #ff6b35;
+                border-radius: 15px;
+                padding: 0;
+                max-width: 900px;
+                width: 95%;
+                max-height: 90vh;
+                overflow: hidden;
+                position: relative;
+                box-shadow: 0 20px 40px rgba(255, 107, 53, 0.3);
+            `;
+
+            modal.innerHTML = `
+                <button onclick="this.parentElement.parentElement.remove()" style="
+                    position: absolute;
+                    top: 15px;
+                    right: 20px;
+                    background: none;
+                    border: none;
+                    color: #ff6b35;
+                    font-size: 1.8rem;
+                    cursor: pointer;
+                    padding: 5px;
+                    z-index: 10001;
+                ">×</button>
+                
+                <!-- Forum Header -->
+                <div style="
+                    background: linear-gradient(45deg, #ff6b35, #ff8c42);
+                    padding: 2rem;
+                    text-align: center;
+                ">
+                    <h1 style="
+                        font-family: 'Orbitron', monospace;
+                        color: white;
+                        margin: 0;
+                        font-size: 2rem;
+                        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+                    ">🏛️ DayZ Server Forums</h1>
+                    <p style="color: rgba(255, 255, 255, 0.9); margin: 0.5rem 0 0 0;">
+                        Community discussions, guides, and server updates
+                    </p>
+                </div>
+
+                <!-- Forum Navigation -->
+                <div style="
+                    background: rgba(0, 0, 0, 0.5);
+                    padding: 1rem 2rem;
+                    border-bottom: 1px solid #444;
+                    display: flex;
+                    gap: 2rem;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                ">
+                    <span style="color: #ff6b35; font-weight: bold;">📋 General</span>
+                    <span style="color: #ccc; cursor: pointer;" onmouseover="this.style.color='#ff6b35'" onmouseout="this.style.color='#ccc'">🎮 Gameplay</span>
+                    <span style="color: #ccc; cursor: pointer;" onmouseover="this.style.color='#ff6b35'" onmouseout="this.style.color='#ccc'">🏗️ Base Building</span>
+                    <span style="color: #ccc; cursor: pointer;" onmouseover="this.style.color='#ff6b35'" onmouseout="this.style.color='#ccc'">🎯 Events</span>
+                    <span style="color: #ccc; cursor: pointer;" onmouseover="this.style.color='#ff6b35'" onmouseout="this.style.color='#ccc'">🛠️ Support</span>
+                </div>
+
+                <!-- Forum Content -->
+                <div style="
+                    padding: 2rem;
+                    max-height: 60vh;
+                    overflow-y: auto;
+                    color: #e0e0e0;
+                ">
+                    <!-- Forum Stats -->
+                    <div style="
+                        display: grid;
+                        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                        gap: 1rem;
+                        margin-bottom: 2rem;
+                    ">
+                        <div style="
+                            background: rgba(255, 107, 53, 0.1);
+                            border: 1px solid rgba(255, 107, 53, 0.3);
+                            border-radius: 10px;
+                            padding: 1rem;
+                            text-align: center;
+                        ">
+                            <div style="font-size: 1.5rem; color: #ff6b35; font-weight: bold;">1,247</div>
+                            <div style="font-size: 0.9rem; color: #ccc;">Total Posts</div>
+                        </div>
+                        <div style="
+                            background: rgba(255, 107, 53, 0.1);
+                            border: 1px solid rgba(255, 107, 53, 0.3);
+                            border-radius: 10px;
+                            padding: 1rem;
+                            text-align: center;
+                        ">
+                            <div style="font-size: 1.5rem; color: #ff6b35; font-weight: bold;">342</div>
+                            <div style="font-size: 0.9rem; color: #ccc;">Active Members</div>
+                        </div>
+                        <div style="
+                            background: rgba(255, 107, 53, 0.1);
+                            border: 1px solid rgba(255, 107, 53, 0.3);
+                            border-radius: 10px;
+                            padding: 1rem;
+                            text-align: center;
+                        ">
+                            <div style="font-size: 1.5rem; color: #ff6b35; font-weight: bold;">89</div>
+                            <div style="font-size: 0.9rem; color: #ccc;">Topics Today</div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Topics -->
+                    <h3 style="color: #ff6b35; margin-bottom: 1rem; font-family: 'Orbitron', monospace;">
+                        🔥 Hot Topics
+                    </h3>
+                    
+                    <div style="space-y: 1rem;">
+                        <!-- Topic 1 -->
+                        <div style="
+                            background: rgba(0, 0, 0, 0.3);
+                            border: 1px solid #444;
+                            border-radius: 10px;
+                            padding: 1.5rem;
+                            margin-bottom: 1rem;
+                            transition: all 0.3s ease;
+                            cursor: pointer;
+                        " onmouseover="this.style.borderColor='#ff6b35'; this.style.background='rgba(255, 107, 53, 0.05)'" onmouseout="this.style.borderColor='#444'; this.style.background='rgba(0, 0, 0, 0.3)'">
+                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+                                <h4 style="color: #ff6b35; margin: 0; font-size: 1.1rem;">
+                                    📌 Server Wipe Schedule - December 2024
+                                </h4>
+                                <span style="
+                                    background: #ff6b35;
+                                    color: white;
+                                    padding: 2px 8px;
+                                    border-radius: 12px;
+                                    font-size: 0.8rem;
+                                    font-weight: bold;
+                                ">PINNED</span>
+                            </div>
+                            <p style="color: #ccc; margin: 0.5rem 0; line-height: 1.4;">
+                                Official announcement about the upcoming server wipe and new features being added...
+                            </p>
+                            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; color: #888;">
+                                <span>👤 ServerAdmin • 💬 23 replies</span>
+                                <span>⏰ 2 hours ago</span>
+                            </div>
+                        </div>
+
+                        <!-- Topic 2 -->
+                        <div style="
+                            background: rgba(0, 0, 0, 0.3);
+                            border: 1px solid #444;
+                            border-radius: 10px;
+                            padding: 1.5rem;
+                            margin-bottom: 1rem;
+                            transition: all 0.3s ease;
+                            cursor: pointer;
+                        " onmouseover="this.style.borderColor='#ff6b35'; this.style.background='rgba(255, 107, 53, 0.05)'" onmouseout="this.style.borderColor='#444'; this.style.background='rgba(0, 0, 0, 0.3)'">
+                            <h4 style="color: #e0e0e0; margin: 0 0 0.5rem 0; font-size: 1.1rem;">
+                                🏗️ Best Base Building Locations - Updated Guide
+                            </h4>
+                            <p style="color: #ccc; margin: 0.5rem 0; line-height: 1.4;">
+                                Comprehensive guide to the best base building spots with pros and cons for each location...
+                            </p>
+                            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; color: #888;">
+                                <span>👤 SurvivalPro • 💬 45 replies</span>
+                                <span>⏰ 5 hours ago</span>
+                            </div>
+                        </div>
+
+                        <!-- Topic 3 -->
+                        <div style="
+                            background: rgba(0, 0, 0, 0.3);
+                            border: 1px solid #444;
+                            border-radius: 10px;
+                            padding: 1.5rem;
+                            margin-bottom: 1rem;
+                            transition: all 0.3s ease;
+                            cursor: pointer;
+                        " onmouseover="this.style.borderColor='#ff6b35'; this.style.background='rgba(255, 107, 53, 0.05)'" onmouseout="this.style.borderColor='#444'; this.style.background='rgba(0, 0, 0, 0.3)'">
+                            <h4 style="color: #e0e0e0; margin: 0 0 0.5rem 0; font-size: 1.1rem;">
+                                🎯 Weekend PvP Tournament - Sign Up Now!
+                            </h4>
+                            <p style="color: #ccc; margin: 0.5rem 0; line-height: 1.4;">
+                                Join our weekend PvP tournament with amazing prizes! Registration closes Friday...
+                            </p>
+                            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; color: #888;">
+                                <span>👤 EventManager • 💬 67 replies</span>
+                                <span>⏰ 1 day ago</span>
+                            </div>
+                        </div>
+
+                        <!-- Topic 4 -->
+                        <div style="
+                            background: rgba(0, 0, 0, 0.3);
+                            border: 1px solid #444;
+                            border-radius: 10px;
+                            padding: 1.5rem;
+                            margin-bottom: 1rem;
+                            transition: all 0.3s ease;
+                            cursor: pointer;
+                        " onmouseover="this.style.borderColor='#ff6b35'; this.style.background='rgba(255, 107, 53, 0.05)'" onmouseout="this.style.borderColor='#444'; this.style.background='rgba(0, 0, 0, 0.3)'">
+                            <h4 style="color: #e0e0e0; margin: 0 0 0.5rem 0; font-size: 1.1rem;">
+                                🤝 Looking for Group - Friendly Players Welcome
+                            </h4>
+                            <p style="color: #ccc; margin: 0.5rem 0; line-height: 1.4;">
+                                Experienced player looking for 2-3 teammates for base building and exploration...
+                            </p>
+                            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; color: #888;">
+                                <span>👤 LoneWanderer • 💬 12 replies</span>
+                                <span>⏰ 2 days ago</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Call to Action -->
+                    <div style="
+                        background: linear-gradient(45deg, rgba(255, 107, 53, 0.1), rgba(255, 140, 66, 0.1));
+                        border: 1px solid rgba(255, 107, 53, 0.3);
+                        border-radius: 15px;
+                        padding: 2rem;
+                        text-align: center;
+                        margin-top: 2rem;
+                    ">
+                        <h3 style="color: #ff6b35; margin-bottom: 1rem; font-family: 'Orbitron', monospace;">
+                            Join the Discussion!
+                        </h3>
+                        <p style="color: #ccc; margin-bottom: 1.5rem;">
+                            This is a mockup of what your server forums could look like. 
+                            Connect with your community, share strategies, and stay updated!
+                        </p>
+                        <button style="
+                            background: linear-gradient(45deg, #ff6b35, #ff8c42);
+                            color: white;
+                            padding: 12px 30px;
+                            border: none;
+                            border-radius: 25px;
+                            font-size: 1rem;
+                            font-weight: 600;
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                        " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'" onclick="alert('This is a mockup! In a real implementation, this would redirect to your actual forums.')">
+                            🚀 Create Real Forums
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            modalOverlay.appendChild(modal);
+            document.body.appendChild(modalOverlay);
+        }
+
+        // Demo function for remaining non-functional links
         function showDemo(feature) {
-            alert(`${feature} Demo\n\nThis is a template demonstration. In a real implementation, this would link to your ${feature.toLowerCase()}.`);
+            if (feature === 'Donations') {
+                showDonationsModal();
+            } else if (feature === 'Contact') {
+                showContactModal();
+            } else {
+                alert(`${feature} Demo\n\nThis is a template demonstration. In a real implementation, this would link to your ${feature.toLowerCase()}.`);
+            }
+        }
+
+        // Donations mockup modal
+        function showDonationsModal() {
+            const modalOverlay = document.createElement('div');
+            modalOverlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.9);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10000;
+                backdrop-filter: blur(5px);
+            `;
+
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                background: linear-gradient(135deg, #2a2a2a, #1f1f1f);
+                border: 2px solid #ff6b35;
+                border-radius: 15px;
+                padding: 0;
+                max-width: 800px;
+                width: 95%;
+                max-height: 90vh;
+                overflow: hidden;
+                position: relative;
+                box-shadow: 0 20px 40px rgba(255, 107, 53, 0.3);
+            `;
+
+            modal.innerHTML = `
+                <button onclick="this.parentElement.parentElement.remove()" style="
+                    position: absolute;
+                    top: 15px;
+                    right: 20px;
+                    background: none;
+                    border: none;
+                    color: #ff6b35;
+                    font-size: 1.8rem;
+                    cursor: pointer;
+                    padding: 5px;
+                    z-index: 10001;
+                ">×</button>
+                
+                <!-- Donations Header -->
+                <div style="
+                    background: linear-gradient(45deg, #ff6b35, #ff8c42);
+                    padding: 2rem;
+                    text-align: center;
+                ">
+                    <h1 style="
+                        font-family: 'Orbitron', monospace;
+                        color: white;
+                        margin: 0;
+                        font-size: 2rem;
+                        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+                    ">💝 Support Our Server</h1>
+                    <p style="color: rgba(255, 255, 255, 0.9); margin: 0.5rem 0 0 0;">
+                        Help us keep the servers running and improve your gaming experience
+                    </p>
+                </div>
+
+                <!-- Donations Content -->
+                <div style="
+                    padding: 2rem;
+                    max-height: 70vh;
+                    overflow-y: auto;
+                    color: #e0e0e0;
+                ">
+                    <!-- Why Donate Section -->
+                    <div style="
+                        background: rgba(255, 107, 53, 0.1);
+                        border: 1px solid rgba(255, 107, 53, 0.3);
+                        border-radius: 15px;
+                        padding: 1.5rem;
+                        margin-bottom: 2rem;
+                        text-align: center;
+                    ">
+                        <h3 style="color: #ff6b35; margin-bottom: 1rem; font-family: 'Orbitron', monospace;">
+                            🎯 Why Your Support Matters
+                        </h3>
+                        <div style="
+                            display: grid;
+                            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                            gap: 1rem;
+                            margin-top: 1rem;
+                        ">
+                            <div style="text-align: center;">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🖥️</div>
+                                <div style="font-weight: bold; color: #ff6b35;">Server Hosting</div>
+                                <div style="font-size: 0.9rem; color: #ccc;">High-performance dedicated servers</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔧</div>
+                                <div style="font-weight: bold; color: #ff6b35;">Maintenance</div>
+                                <div style="font-size: 0.9rem; color: #ccc;">Regular updates and bug fixes</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎮</div>
+                                <div style="font-weight: bold; color: #ff6b35;">New Features</div>
+                                <div style="font-size: 0.9rem; color: #ccc;">Custom mods and improvements</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Donation Tiers -->
+                    <h3 style="color: #ff6b35; margin-bottom: 1.5rem; font-family: 'Orbitron', monospace; text-align: center;">
+                        🏆 Supporter Tiers
+                    </h3>
+                    
+                    <div style="
+                        display: grid;
+                        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                        gap: 1.5rem;
+                        margin-bottom: 2rem;
+                    ">
+                        <!-- Bronze Tier -->
+                        <div style="
+                            background: linear-gradient(135deg, rgba(205, 127, 50, 0.2), rgba(160, 82, 45, 0.2));
+                            border: 2px solid #cd7f32;
+                            border-radius: 15px;
+                            padding: 1.5rem;
+                            text-align: center;
+                            transition: all 0.3s ease;
+                            cursor: pointer;
+                        " onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 30px rgba(205, 127, 50, 0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'" onclick="selectDonationAmount(5)">
+                            <div style="font-size: 2.5rem; margin-bottom: 1rem;">🥉</div>
+                            <h4 style="color: #cd7f32; margin-bottom: 0.5rem; font-family: 'Orbitron', monospace;">Bronze Supporter</h4>
+                            <div style="font-size: 1.8rem; font-weight: bold; color: #cd7f32; margin-bottom: 1rem;">$5</div>
+                            <ul style="list-style: none; padding: 0; color: #ccc; font-size: 0.9rem;">
+                                <li style="margin-bottom: 0.5rem;">✅ Supporter Badge</li>
+                                <li style="margin-bottom: 0.5rem;">✅ Priority Queue</li>
+                                <li style="margin-bottom: 0.5rem;">✅ Discord Role</li>
+                            </ul>
+                        </div>
+
+                        <!-- Silver Tier -->
+                        <div style="
+                            background: linear-gradient(135deg, rgba(192, 192, 192, 0.2), rgba(169, 169, 169, 0.2));
+                            border: 2px solid #c0c0c0;
+                            border-radius: 15px;
+                            padding: 1.5rem;
+                            text-align: center;
+                            transition: all 0.3s ease;
+                            cursor: pointer;
+                        " onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 30px rgba(192, 192, 192, 0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'" onclick="selectDonationAmount(15)">
+                            <div style="font-size: 2.5rem; margin-bottom: 1rem;">🥈</div>
+                            <h4 style="color: #c0c0c0; margin-bottom: 0.5rem; font-family: 'Orbitron', monospace;">Silver Supporter</h4>
+                            <div style="font-size: 1.8rem; font-weight: bold; color: #c0c0c0; margin-bottom: 1rem;">$15</div>
+                            <ul style="list-style: none; padding: 0; color: #ccc; font-size: 0.9rem;">
+                                <li style="margin-bottom: 0.5rem;">✅ All Bronze Benefits</li>
+                                <li style="margin-bottom: 0.5rem;">✅ Reserved Slot</li>
+                                <li style="margin-bottom: 0.5rem;">✅ Custom Name Color</li>
+                                <li style="margin-bottom: 0.5rem;">✅ Starter Kit</li>
+                            </ul>
+                        </div>
+
+                        <!-- Gold Tier -->
+                        <div style="
+                            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 193, 7, 0.2));
+                            border: 2px solid #ffd700;
+                            border-radius: 15px;
+                            padding: 1.5rem;
+                            text-align: center;
+                            transition: all 0.3s ease;
+                            cursor: pointer;
+                            position: relative;
+                        " onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 30px rgba(255, 215, 0, 0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'" onclick="selectDonationAmount(30)">
+                            <div style="
+                                position: absolute;
+                                top: -10px;
+                                right: -10px;
+                                background: #ff6b35;
+                                color: white;
+                                padding: 5px 10px;
+                                border-radius: 15px;
+                                font-size: 0.8rem;
+                                font-weight: bold;
+                            ">POPULAR</div>
+                            <div style="font-size: 2.5rem; margin-bottom: 1rem;">🥇</div>
+                            <h4 style="color: #ffd700; margin-bottom: 0.5rem; font-family: 'Orbitron', monospace;">Gold Supporter</h4>
+                            <div style="font-size: 1.8rem; font-weight: bold; color: #ffd700; margin-bottom: 1rem;">$30</div>
+                            <ul style="list-style: none; padding: 0; color: #ccc; font-size: 0.9rem;">
+                                <li style="margin-bottom: 0.5rem;">✅ All Silver Benefits</li>
+                                <li style="margin-bottom: 0.5rem;">✅ VIP Discord Channel</li>
+                                <li style="margin-bottom: 0.5rem;">✅ Monthly Care Package</li>
+                                <li style="margin-bottom: 0.5rem;">✅ Base Protection (48h)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Custom Amount -->
+                    <div style="
+                        background: rgba(0, 0, 0, 0.3);
+                        border: 1px solid #444;
+                        border-radius: 15px;
+                        padding: 1.5rem;
+                        margin-bottom: 2rem;
+                        text-align: center;
+                    ">
+                        <h4 style="color: #ff6b35; margin-bottom: 1rem; font-family: 'Orbitron', monospace;">
+                            💰 Custom Amount
+                        </h4>
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+                            <span style="color: #ccc;">$</span>
+                            <input type="number" id="customAmount" placeholder="Enter amount" min="1" style="
+                                background: #1a1a1a;
+                                border: 2px solid #444;
+                                border-radius: 8px;
+                                color: #e0e0e0;
+                                padding: 10px 15px;
+                                font-size: 1.1rem;
+                                width: 150px;
+                                text-align: center;
+                            " onfocus="this.style.borderColor='#ff6b35'" onblur="this.style.borderColor='#444'">
+                            <button onclick="selectCustomAmount()" style="
+                                background: linear-gradient(45deg, #ff6b35, #ff8c42);
+                                color: white;
+                                padding: 10px 20px;
+                                border: none;
+                                border-radius: 8px;
+                                font-weight: 600;
+                                cursor: pointer;
+                                transition: all 0.3s ease;
+                            " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                                Select
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Payment Methods -->
+                    <div id="paymentSection" style="display: none;">
+                        <h3 style="color: #ff6b35; margin-bottom: 1.5rem; font-family: 'Orbitron', monospace; text-align: center;">
+                            💳 Choose Payment Method
+                        </h3>
+                        
+                        <div style="
+                            display: grid;
+                            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                            gap: 1.5rem;
+                            margin-bottom: 2rem;
+                        ">
+                            <!-- Stripe Payment -->
+                            <div style="
+                                background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(79, 70, 229, 0.1));
+                                border: 2px solid #6366f1;
+                                border-radius: 15px;
+                                padding: 2rem;
+                                text-align: center;
+                                transition: all 0.3s ease;
+                                cursor: pointer;
+                            " onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 30px rgba(99, 102, 241, 0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'" onclick="processStripePayment()">
+                                <div style="font-size: 3rem; margin-bottom: 1rem;">💳</div>
+                                <h4 style="color: #6366f1; margin-bottom: 1rem; font-family: 'Orbitron', monospace;">Stripe</h4>
+                                <p style="color: #ccc; font-size: 0.9rem; margin-bottom: 1rem;">
+                                    Secure payment with credit/debit cards
+                                </p>
+                                <div style="display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1rem;">
+                                    <span style="background: #fff; color: #000; padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; font-weight: bold;">VISA</span>
+                                    <span style="background: #fff; color: #000; padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; font-weight: bold;">MC</span>
+                                    <span style="background: #fff; color: #000; padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; font-weight: bold;">AMEX</span>
+                                </div>
+                                <div style="color: #4ade80; font-size: 0.9rem; font-weight: bold;">
+                                    ✅ Instant Processing
+                                </div>
+                            </div>
+
+                            <!-- PayPal Payment -->
+                            <div style="
+                                background: linear-gradient(135deg, rgba(0, 48, 135, 0.1), rgba(0, 112, 209, 0.1));
+                                border: 2px solid #0070d1;
+                                border-radius: 15px;
+                                padding: 2rem;
+                                text-align: center;
+                                transition: all 0.3s ease;
+                                cursor: pointer;
+                            " onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 30px rgba(0, 112, 209, 0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'" onclick="processPayPalPayment()">
+                                <div style="font-size: 3rem; margin-bottom: 1rem;">🅿️</div>
+                                <h4 style="color: #0070d1; margin-bottom: 1rem; font-family: 'Orbitron', monospace;">PayPal</h4>
+                                <p style="color: #ccc; font-size: 0.9rem; margin-bottom: 1rem;">
+                                    Pay with your PayPal account or card
+                                </p>
+                                <div style="display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1rem;">
+                                    <span style="background: #0070d1; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; font-weight: bold;">PayPal</span>
+                                    <span style="background: #fff; color: #000; padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; font-weight: bold;">Cards</span>
+                                </div>
+                                <div style="color: #4ade80; font-size: 0.9rem; font-weight: bold;">
+                                    ✅ Buyer Protection
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Selected Amount Display -->
+                        <div id="selectedAmountDisplay" style="
+                            background: rgba(255, 107, 53, 0.1);
+                            border: 1px solid rgba(255, 107, 53, 0.3);
+                            border-radius: 10px;
+                            padding: 1rem;
+                            text-align: center;
+                            margin-bottom: 1rem;
+                        ">
+                            <span style="color: #ccc;">Selected Amount: </span>
+                            <span id="selectedAmountText" style="color: #ff6b35; font-weight: bold; font-size: 1.2rem;">$0</span>
+                        </div>
+                    </div>
+
+                    <!-- Security Notice -->
+                    <div style="
+                        background: rgba(74, 222, 128, 0.1);
+                        border: 1px solid rgba(74, 222, 128, 0.3);
+                        border-radius: 10px;
+                        padding: 1rem;
+                        text-align: center;
+                        margin-top: 1rem;
+                    ">
+                        <div style="color: #4ade80; font-weight: bold; margin-bottom: 0.5rem;">
+                            🔒 100% Secure & Encrypted
+                        </div>
+                        <div style="color: #ccc; font-size: 0.9rem;">
+                            All payments are processed securely. We never store your payment information.
+                        </div>
+                    </div>
+
+                    <!-- Demo Notice -->
+                    <div style="
+                        background: rgba(255, 107, 53, 0.1);
+                        border: 1px solid rgba(255, 107, 53, 0.3);
+                        border-radius: 15px;
+                        padding: 2rem;
+                        text-align: center;
+                        margin-top: 2rem;
+                    ">
+                        <h3 style="color: #ff6b35; margin-bottom: 1rem; font-family: 'Orbitron', monospace;">
+                            ⚠️ Demo Notice
+                        </h3>
+                        <p style="color: #ccc; margin-bottom: 1.5rem;">
+                            This is a mockup demonstration. In a real implementation, these buttons would connect to actual Stripe and PayPal payment processors.
+                        </p>
+                        <button style="
+                            background: linear-gradient(45deg, #ff6b35, #ff8c42);
+                            color: white;
+                            padding: 12px 30px;
+                            border: none;
+                            border-radius: 25px;
+                            font-size: 1rem;
+                            font-weight: 600;
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                        " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'" onclick="alert('In a real implementation, you would integrate with Stripe and PayPal APIs to process actual payments securely.')">
+                            🚀 Implement Real Payments
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            modalOverlay.appendChild(modal);
+            document.body.appendChild(modalOverlay);
+        }
+
+        // Donation amount selection functions
+        let selectedAmount = 0;
+
+        function selectDonationAmount(amount) {
+            selectedAmount = amount;
+            document.getElementById('selectedAmountText').textContent = '$' + amount;
+            document.getElementById('paymentSection').style.display = 'block';
+            document.getElementById('paymentSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function selectCustomAmount() {
+            const customAmount = document.getElementById('customAmount').value;
+            if (customAmount && customAmount > 0) {
+                selectedAmount = parseFloat(customAmount);
+                document.getElementById('selectedAmountText').textContent = '$' + selectedAmount;
+                document.getElementById('paymentSection').style.display = 'block';
+                document.getElementById('paymentSection').scrollIntoView({ behavior: 'smooth' });
+            } else {
+                alert('Please enter a valid amount greater than $0');
+            }
+        }
+
+        function processStripePayment() {
+            if (selectedAmount <= 0) {
+                alert('Please select a donation amount first');
+                return;
+            }
+            
+            // Simulate Stripe payment processing
+            const processingModal = createProcessingModal('Stripe', selectedAmount);
+            document.body.appendChild(processingModal);
+            
+            setTimeout(() => {
+                processingModal.remove();
+                alert(`Demo: Stripe payment of $${selectedAmount} would be processed here.\n\nIn a real implementation, this would:\n1. Create a Stripe checkout session\n2. Redirect to Stripe's secure payment page\n3. Handle the payment confirmation\n4. Grant supporter benefits`);
+            }, 2000);
+        }
+
+        function processPayPalPayment() {
+            if (selectedAmount <= 0) {
+                alert('Please select a donation amount first');
+                return;
+            }
+            
+            // Simulate PayPal payment processing
+            const processingModal = createProcessingModal('PayPal', selectedAmount);
+            document.body.appendChild(processingModal);
+            
+            setTimeout(() => {
+                processingModal.remove();
+                alert(`Demo: PayPal payment of $${selectedAmount} would be processed here.\n\nIn a real implementation, this would:\n1. Create a PayPal payment request\n2. Redirect to PayPal's secure payment page\n3. Handle the payment confirmation\n4. Grant supporter benefits`);
+            }, 2000);
+        }
+
+        function createProcessingModal(provider, amount) {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.9);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10002;
+                backdrop-filter: blur(5px);
+            `;
+            
+            modal.innerHTML = `
+                <div style="
+                    background: linear-gradient(135deg, #2a2a2a, #1f1f1f);
+                    border: 2px solid #ff6b35;
+                    border-radius: 15px;
+                    padding: 3rem;
+                    text-align: center;
+                    max-width: 400px;
+                    width: 90%;
+                ">
+                    <div class="loading" style="
+                        display: inline-block;
+                        width: 40px;
+                        height: 40px;
+                        border: 4px solid #444;
+                        border-radius: 50%;
+                        border-top-color: #ff6b35;
+                        animation: spin 1s ease-in-out infinite;
+                        margin-bottom: 1.5rem;
+                    "></div>
+                    <h3 style="color: #ff6b35; margin-bottom: 1rem; font-family: 'Orbitron', monospace;">
+                        Processing Payment
+                    </h3>
+                    <p style="color: #ccc; margin-bottom: 0.5rem;">
+                        Connecting to ${provider}...
+                    </p>
+                    <p style="color: #ff6b35; font-weight: bold; font-size: 1.2rem;">
+                        $${amount}
+                    </p>
+                </div>
+            `;
+            
+            return modal;
+        }
+
+        // Contact modal function
+        function showContactModal() {
+            alert('Contact Demo\n\nThis would show a contact form or support information in a real implementation.');
         }
 
 
@@ -1237,5 +1997,5 @@
             cursorElement.style.top = e.clientY - 10 + 'px';
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'967d6b83378464c2',t:'MTc1Mzk2ODMwNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'967d7d2c476db40c',t:'MTc1Mzk2OTAzMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
