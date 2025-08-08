@@ -1,0 +1,174 @@
+# 🧭 Traveling Trader System – Design Document
+
+## 🎯 Overview
+This system introduces a **Traveling Trader** to your DayZ server using **Expansion Market** and **Expansion Map** modules. The trader appears at random across multiple locations, with dynamic map markers and timed visibility.
+
+## 🛠️ Core Features
+
+| Feature                          | Description |
+|----------------------------------|-------------|
+| ⏱ Timed trader spawn/despawn     | Trader appears every 60 minutes |
+| 🌐 Loads `.map` files             | Custom environments per trader location |
+| 📍 Dynamic map marker             | Marker appears when trader arrives |
+| 🕒 Marker lifetime                | Marker disappears after 30 minutes |
+| 🔁 No repeat locations            | Avoids repeating the last spot |
+| 📢 Player notifications           | Chat notification when trader arrives |
+
+## 📂 Folder Structure Example
+
+```
+missions/
+└── mapfiles/
+    ├── trader_spot1.map
+    ├── trader_spot2.map
+    ├── trader_spot3.map
+    └── trader_spot4.map
+
+scripts/
+└── 4_World/
+    └── traveling_trader.c
+```
+
+## 🔧 Implementation
+
+### Initialization (in `mission/server.c`)
+```c
+ref TravelingTrader m_TravelingTrader;
+
+override void OnInit()
+{
+    super.OnInit();
+    m_TravelingTrader = new TravelingTrader();
+}
+```
+
+### Core Logic: `traveling_trader.c`
+```c
+class TravelingTrader
+{
+    ref Timer m_SpawnTimer;
+    ref Timer m_DespawnMarkerTimer;
+    ref array<string> m_MapFiles;
+    ref array<Object> m_SpawnedObjects;
+
+    string m_LastMapFile;
+    const float TRADER_LIFETIME = 3600.0; // 60 min
+    const float MARKER_DURATION = 1800.0; // 30 min
+
+    void TravelingTrader()
+    {
+        m_SpawnTimer = new Timer(CALL_CATEGORY_SYSTEM);
+        m_DespawnMarkerTimer = new Timer(CALL_CATEGORY_SYSTEM);
+        m_SpawnedObjects = new array<Object>();
+
+        m_MapFiles = {
+            "$mission:mapfiles/trader_spot1.map",
+            "$mission:mapfiles/trader_spot2.map",
+            "$mission:mapfiles/trader_spot3.map",
+            "$mission:mapfiles/trader_spot4.map"
+        };
+
+        SpawnNewTrader();
+        m_SpawnTimer.Run(TRADER_LIFETIME, this, "SpawnNewTrader", NULL, true);
+    }
+
+    void SpawnNewTrader()
+    {
+        DespawnCurrentTrader(); // cleanup
+
+        string newMap;
+        do {
+            newMap = m_MapFiles.GetRandomElement();
+        } while (newMap == m_LastMapFile);
+
+        m_LastMapFile = newMap;
+
+        GetGame().LoadMap(newMap, m_SpawnedObjects);
+
+        vector markerPos = GetMarkerFromMapName(newMap);
+        CreateMapMarker("TravelingTrader", markerPos);
+        NotifyPlayers("📦 A traveling trader has arrived near " + FormatLocationName(newMap) + "!");
+
+        m_DespawnMarkerTimer.Run(MARKER_DURATION, this, "RemoveMapMarker", NULL, false);
+    }
+
+    void DespawnCurrentTrader()
+    {
+        foreach (Object obj : m_SpawnedObjects)
+        {
+            if (obj)
+                GetGame().ObjectDelete(obj);
+        }
+
+        m_SpawnedObjects.Clear();
+        RemoveMapMarker();
+    }
+
+    void RemoveMapMarker()
+    {
+        auto markerModule = ExpansionMapMarkerModule.Cast(CF_ModuleCoreManager.Get(ExpansionMapMarkerModule));
+        if (markerModule)
+        {
+            markerModule.RemoveServerMarker("TravelingTrader");
+        }
+
+        Print("[TravelingTrader] Marker removed.");
+    }
+
+    void NotifyPlayers(string msg)
+    {
+        array<Man> players = new array<Man>();
+        GetGame().GetPlayers(players);
+
+        foreach (PlayerBase player : players)
+        {
+            if (player)
+                player.MessageStatus(msg);
+        }
+    }
+
+    void CreateMapMarker(string markerName, vector pos)
+    {
+        auto markerModule = ExpansionMapMarkerModule.Cast(CF_ModuleCoreManager.Get(ExpansionMapMarkerModule));
+        if (markerModule)
+        {
+            markerModule.RemoveServerMarker(markerName);
+            markerModule.CreateServerMarker(markerName, pos, ExpansionMapMarkerType.MARKER, ARGB(255, 255, 255, 0), "TRADER", true);
+        }
+    }
+
+    vector GetMarkerFromMapName(string mapPath)
+    {
+        if (mapPath.Contains("trader_spot1")) return "7300 0 5500";
+        if (mapPath.Contains("trader_spot2")) return "8000 0 4000";
+        if (mapPath.Contains("trader_spot3")) return "9000 0 5000";
+        if (mapPath.Contains("trader_spot4")) return "6500 0 4700";
+        return "7500 0 7500";
+    }
+
+    string FormatLocationName(string path)
+    {
+        string name = path;
+        name.Replace("$mission:mapfiles/", "");
+        name.Replace(".map", "");
+        name.Replace("_", " ");
+        name.ToUpper();
+        return name;
+    }
+}
+```
+
+## 🧪 Testing Notes
+- `.map` files must contain:
+  - ExpansionTrader object (e.g. `ExpansionTraderHelga.Market`)
+  - Props: tents, tables, crates, etc.
+- Use `/mapeditor export mapname` in Expansion Tools
+
+## 📌 Future Additions (Optional)
+| Feature | Description |
+|--------|-------------|
+| 🔄 Persistent last-used `.map` | Save to JSON and skip it next restart |
+| 🧾 Unique loot per trader | Assign custom categories by location |
+| ⚔ Guard spawns | Add zombies or AI |
+| 📢 Trader leaves notification | Notify when trader despawns |
+| 🗃 .map randomization inside region folders | Easier to scale |
